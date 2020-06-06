@@ -13,7 +13,7 @@ namespace NinjaClass.Items.Armor
 			base.SetStaticDefaults();
 			Tooltip.SetDefault("3% increased movement speed" +
 				"\n2% increased ninja critical strike chance" +
-                "\nincreased ninja knockback");
+                "\nsmall increase to ninja knockback");
 		}
 
 		public override void SetDefaults() {
