@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "3KyOZr8tV2SsSxRKlGBYLutRlZR9pZRiwqwB+Duu6eYwnINvcC3tZXXPYxTVhVlTrG1aGnGlvCigqvx9Kgf4bA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\jorda\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\AssassinClass\\AssassinClass.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jorda\\.nuget\\packages\\tmodloader.codeassist\\0.1.1\\tmodloader.codeassist.0.1.1.nupkg.sha512"
+  ],
+  "logs": []
+}
