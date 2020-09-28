@@ -1,27 +1,30 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace NinjaClass.Projectiles
+namespace NinjaClass.Projectiles.Hardmode
 {
-	public class PlatinumDaggerProjectile : ModProjectile
+	public class NightTerror2Projectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Javelin");
+			DisplayName.SetDefault("Dagger");
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
+			projectile.width = 20;
+			projectile.height = 20;
 			projectile.friendly = true;
 			projectile.thrown = true;
 			projectile.penetrate = 3;
 			projectile.hide = true;
+			projectile.tileCollide = false;
 		}
 
 		// See ExampleBehindTilesProjectile. 
@@ -54,6 +57,10 @@ namespace NinjaClass.Projectiles
 			// For going through platforms and such, javelins use a tad smaller size
 			width = height = 10; // notice we set the width to the height, the height to 10. so both are 10
 			return true;
+		}
+		public override bool OnTileCollide(Vector2 oldVelocity)
+		{
+			return false;
 		}
 
 		public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
@@ -116,7 +123,7 @@ namespace NinjaClass.Projectiles
 			set => projectile.ai[1] = value;
 		}
 
-		private const int MAX_STICKY_JAVELINS = 3; // This is the max. amount of javelins being able to attach
+		private const int MAX_STICKY_JAVELINS = 1; // This is the max. amount of javelins being able to attach
 		private readonly Point[] _stickingJavelins = new Point[MAX_STICKY_JAVELINS]; // The point array holding for sticking javelins
 
 		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
@@ -127,12 +134,15 @@ namespace NinjaClass.Projectiles
 				(target.Center - projectile.Center) *
 				0.75f; // Change velocity based on delta center of targets (difference between entity centers)
 			projectile.netUpdate = true; // netUpdate this javelin
-			target.AddBuff(BuffType<Buffs.Wound>(), 60);
+
 
 			projectile.damage = 0; // Makes sure the sticking javelins do not deal damage anymore
 
 			// It is recommended to split your code into separate methods to keep code clean and clear
 			UpdateStickyJavelins(target);
+			Vector2 center;
+			float angle;
+			Vector2 tar;
 		}
 
 		/*
@@ -149,7 +159,7 @@ namespace NinjaClass.Projectiles
 					&& currentProjectile.active // Make sure the projectile is active
 					&& currentProjectile.owner == Main.myPlayer // Make sure the projectile's owner is the client's player
 					&& currentProjectile.type == projectile.type // Make sure the projectile is of the same type as this javelin
-					&& currentProjectile.modProjectile is PlatinumDaggerProjectile daggerProjectile // Use a pattern match cast so we can access the projectile like an ExampleJavelinProjectile
+					&& currentProjectile.modProjectile is NightTerror2Projectile daggerProjectile // Use a pattern match cast so we can access the projectile like an ExampleJavelinProjectile
 					&& daggerProjectile.IsStickingToTarget // the previous pattern match allows us to use our properties
 					&& daggerProjectile.TargetWhoAmI == target.whoAmI)
 				{
@@ -185,6 +195,7 @@ namespace NinjaClass.Projectiles
 		// Change this number if you want to alter how the alpha changes
 		private const int ALPHA_REDUCTION = 25;
 		int deathCount = 0;
+		
 		public override void AI()
 		{
 			UpdateAlpha();
@@ -192,6 +203,7 @@ namespace NinjaClass.Projectiles
 			// Separating into different methods helps keeps your AI clean
 			if (IsStickingToTarget) StickyAI();
 			else NormalAI();
+			Lighting.AddLight(projectile.Center, 0.72f, 0.33f, 0.82f); // R G B values from 0 to 1f. This is the red from the Crimson Heart pet
 
 		}
 
@@ -214,26 +226,56 @@ namespace NinjaClass.Projectiles
 		{
 			TargetWhoAmI++;
 			deathCount++;
-            if (deathCount >= 30)
+            if (deathCount >= 28)
             {
 				projectile.Kill();
 			}
-			// For a little while, the javelin will travel with the same speed, but after this, the javelin drops velocity very quickly.
-			if (TargetWhoAmI >= MAX_TICKS)
-			{
-				// Change these multiplication factors to alter the javelin's movement change after reaching maxTicks
-				const float velXmult = 0.98f; // x velocity factor, every AI update the x velocity will be 98% of the original speed
-				const float velYmult = 0.14f; // y velocity factor, every AI update the y velocity will be be 0.35f bigger of the original speed, causing the javelin to drop to the ground
-				TargetWhoAmI = MAX_TICKS; // set ai1 to maxTicks continuously
-				projectile.velocity.X *= velXmult;
-				projectile.velocity.Y += velYmult;
-			}
 
-			// Make sure to set the rotation accordingly to the velocity, and add some to work around the sprite's rotation
-			// Please notice the MathHelper usage, offset the rotation by 90 degrees (to radians because rotation uses radians) because the sprite's rotation is not aligned!
-			projectile.rotation =
-				projectile.velocity.ToRotation() +
-				MathHelper.ToRadians(45f);
+			/*if (deathCount >= 14)
+			{
+				for (int i = 0; i < 200; i++)
+				{
+					NPC target = Main.npc[i];
+					//If the npc is hostile
+					if (!target.dontTakeDamageFromHostiles)
+					{
+						//Get the shoot trajectory from the projectile and target
+						float shootToX = target.position.X + (float)target.width * 0.5f - projectile.Center.X;
+						float shootToY = target.position.Y - projectile.Center.Y;
+						float distance = (float)System.Math.Sqrt((double)(shootToX * shootToX + shootToY * shootToY));
+
+						//If the distance between the live targeted npc and the projectile is less than 480 pixels
+						if (distance < 480f && !target.friendly && target.active)
+						{
+							//Divide the factor, 3f, which is the desired velocity
+							distance = 3f / distance;
+
+							//Multiply the distance by a multiplier if you wish the projectile to have go faster
+							shootToX *= distance * 5;
+							shootToY *= distance * 5;
+
+							//Set the velocities to the shoot values
+							projectile.velocity.X = shootToX;
+							projectile.velocity.Y = shootToY;
+
+						}
+					}
+				}
+
+			}*/
+
+
+			projectile.direction = projectile.spriteDirection = projectile.velocity.X > 0f ? 1 : -1;
+			projectile.rotation = projectile.velocity.ToRotation() + MathHelper.ToRadians(45f);
+			if (projectile.velocity.Y > 16f)
+			{
+				projectile.velocity.Y = 16f;
+			}
+			// Since our sprite has an orientation, we need to adjust rotation to compensate for the draw flipping.
+			if (projectile.spriteDirection == -1)
+			{
+				projectile.rotation += (MathHelper.Pi + MathHelper.ToRadians(-90f));
+			}
 
 		}
 
@@ -266,6 +308,22 @@ namespace NinjaClass.Projectiles
 			{ // Otherwise, kill the projectile
 				projectile.Kill();
 			}
+		}
+		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+		{
+			Texture2D texture = mod.GetTexture("Projectiles/Hardmode/NightTerror2Projectile_Glow");
+			spriteBatch.Draw
+			(
+				texture,
+				projectile.position,
+				new Rectangle(0, 0, texture.Width, texture.Height),
+				Color.White,
+				projectile.rotation,
+				texture.Size() * 0.5f,
+				projectile.scale,
+				SpriteEffects.None,
+				0f
+			);
 		}
 	}
 }

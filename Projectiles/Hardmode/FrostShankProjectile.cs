@@ -4,24 +4,27 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
+using NinjaClass.Projectiles.Hardmode;
+using System.Security.Cryptography.X509Certificates;
 
-namespace NinjaClass.Projectiles
+namespace NinjaClass.Projectiles.Hardmode
 {
-	public class PlatinumDaggerProjectile : ModProjectile
+	public class FrostShankProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Javelin");
+			DisplayName.SetDefault("Dagger");
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
+			projectile.width = 20;
+			projectile.height = 20;
 			projectile.friendly = true;
 			projectile.thrown = true;
-			projectile.penetrate = 3;
+			projectile.penetrate = 1;
 			projectile.hide = true;
+			 
 		}
 
 		// See ExampleBehindTilesProjectile. 
@@ -93,6 +96,40 @@ namespace NinjaClass.Projectiles
 				dust.noGravity = true;
 				usePos -= rotVector * 8f;
 			}
+
+			
+			Vector2 center;
+			float angle;
+			Vector2 tar;
+
+			if (hasSpawned == false)
+			{
+				hasSpawned = true;
+				for (int i = 0; i < 6; i++)
+				{
+					// Where dagger appears
+
+					
+					angle = Main.rand.Next(360) * 0.0174f;
+					//center.X += (float)System.Math.Sin(angle) * 200;
+					//center.Y += (float)System.Math.Cos(angle) * 200;
+
+					center.X = projectile.position.X;
+					center.Y = projectile.position.Y;
+
+					tar.X = projectile.position.X;
+					tar.Y = projectile.position.Y;
+
+					tar.Normalize();
+					tar.X += (float)System.Math.Sin(angle) * 200;
+					tar.Y += (float)System.Math.Cos(angle) * 200;
+					tar.Normalize();
+					tar *= 8; // speed
+					//tar.X -= (tar.X / 2) * 2  ;
+					//Projectile.NewProjectile(center.X, center.Y, tar.X, tar.Y, mod.ProjectileType("FrostShankProjectile"), (int)(damage * 0.50f), knockback, projectile.owner, 0f, 0f);
+					Projectile.NewProjectile(center.X, center.Y, tar.X, tar.Y, mod.ProjectileType("FrostShank2Projectile"), (int)(projectile.damage * 0.50f), projectile.knockBack, projectile.owner, 0f, 0f);
+				}  // last 0f,0f, this is projectile.ai[0] and projectile.ai[1] where you can put timer, angle, or the target.a
+			}
 		}
 
 		// 
@@ -116,23 +153,14 @@ namespace NinjaClass.Projectiles
 			set => projectile.ai[1] = value;
 		}
 
-		private const int MAX_STICKY_JAVELINS = 3; // This is the max. amount of javelins being able to attach
-		private readonly Point[] _stickingJavelins = new Point[MAX_STICKY_JAVELINS]; // The point array holding for sticking javelins
 
+		private const int MAX_STICKY_JAVELINS = 2; // This is the max. amount of javelins being able to attach
+		private readonly Point[] _stickingJavelins = new Point[MAX_STICKY_JAVELINS]; // The point array holding for sticking javelins
+		bool hasSpawned = false;
 		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
-			IsStickingToTarget = true; // we are sticking to a target
-			TargetWhoAmI = target.whoAmI; // Set the target whoAmI
-			projectile.velocity =
-				(target.Center - projectile.Center) *
-				0.75f; // Change velocity based on delta center of targets (difference between entity centers)
-			projectile.netUpdate = true; // netUpdate this javelin
-			target.AddBuff(BuffType<Buffs.Wound>(), 60);
+			
 
-			projectile.damage = 0; // Makes sure the sticking javelins do not deal damage anymore
-
-			// It is recommended to split your code into separate methods to keep code clean and clear
-			UpdateStickyJavelins(target);
 		}
 
 		/*
@@ -149,7 +177,7 @@ namespace NinjaClass.Projectiles
 					&& currentProjectile.active // Make sure the projectile is active
 					&& currentProjectile.owner == Main.myPlayer // Make sure the projectile's owner is the client's player
 					&& currentProjectile.type == projectile.type // Make sure the projectile is of the same type as this javelin
-					&& currentProjectile.modProjectile is PlatinumDaggerProjectile daggerProjectile // Use a pattern match cast so we can access the projectile like an ExampleJavelinProjectile
+					&& currentProjectile.modProjectile is FrostShankProjectile daggerProjectile // Use a pattern match cast so we can access the projectile like an ExampleJavelinProjectile
 					&& daggerProjectile.IsStickingToTarget // the previous pattern match allows us to use our properties
 					&& daggerProjectile.TargetWhoAmI == target.whoAmI)
 				{
@@ -180,7 +208,7 @@ namespace NinjaClass.Projectiles
 
 		// Added these 2 constant to showcase how you could make AI code cleaner by doing this
 		// Change this number if you want to alter how long the javelin can travel at a constant speed
-		private const int MAX_TICKS = 4;
+		private const int MAX_TICKS = 5;
 
 		// Change this number if you want to alter how the alpha changes
 		private const int ALPHA_REDUCTION = 25;
@@ -192,7 +220,7 @@ namespace NinjaClass.Projectiles
 			// Separating into different methods helps keeps your AI clean
 			if (IsStickingToTarget) StickyAI();
 			else NormalAI();
-
+			
 		}
 
 		private void UpdateAlpha()
@@ -214,7 +242,7 @@ namespace NinjaClass.Projectiles
 		{
 			TargetWhoAmI++;
 			deathCount++;
-            if (deathCount >= 30)
+            if (deathCount >= 33)
             {
 				projectile.Kill();
 			}
@@ -222,8 +250,8 @@ namespace NinjaClass.Projectiles
 			if (TargetWhoAmI >= MAX_TICKS)
 			{
 				// Change these multiplication factors to alter the javelin's movement change after reaching maxTicks
-				const float velXmult = 0.98f; // x velocity factor, every AI update the x velocity will be 98% of the original speed
-				const float velYmult = 0.14f; // y velocity factor, every AI update the y velocity will be be 0.35f bigger of the original speed, causing the javelin to drop to the ground
+				const float velXmult = 0.99f; // x velocity factor, every AI update the x velocity will be 98% of the original speed
+				const float velYmult = 0.17f; // y velocity factor, every AI update the y velocity will be be 0.35f bigger of the original speed, causing the javelin to drop to the ground
 				TargetWhoAmI = MAX_TICKS; // set ai1 to maxTicks continuously
 				projectile.velocity.X *= velXmult;
 				projectile.velocity.Y += velYmult;
@@ -231,9 +259,17 @@ namespace NinjaClass.Projectiles
 
 			// Make sure to set the rotation accordingly to the velocity, and add some to work around the sprite's rotation
 			// Please notice the MathHelper usage, offset the rotation by 90 degrees (to radians because rotation uses radians) because the sprite's rotation is not aligned!
-			projectile.rotation =
-				projectile.velocity.ToRotation() +
-				MathHelper.ToRadians(45f);
+			projectile.direction = projectile.spriteDirection = projectile.velocity.X > 0f ? 1 : -1;
+			projectile.rotation = projectile.velocity.ToRotation() + MathHelper.ToRadians(45f);
+			if (projectile.velocity.Y > 16f)
+			{
+				projectile.velocity.Y = 16f;
+			}
+			// Since our sprite has an orientation, we need to adjust rotation to compensate for the draw flipping.
+			if (projectile.spriteDirection == -1)
+			{
+				projectile.rotation += (MathHelper.Pi + MathHelper.ToRadians(-90f));
+			}
 
 		}
 

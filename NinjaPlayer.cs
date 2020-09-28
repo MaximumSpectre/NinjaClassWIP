@@ -23,12 +23,15 @@ namespace NinjaClass
 	{
 		public bool Wound;
 		public bool Rot;
+		public bool Slowed;
+
 
 
 		public override void ResetEffects()
 		{
 			Wound = false;
 			Rot = false;
+			Slowed = false;
 		}
 
 
@@ -36,6 +39,7 @@ namespace NinjaClass
 		{
 			Wound = false;
 			Rot = false;
+			Slowed = false;
 		}
 
 		public override void UpdateBadLifeRegen()

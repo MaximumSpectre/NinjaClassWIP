@@ -1,5 +1,6 @@
 
 using Microsoft.Xna.Framework;
+using NinjaClass.Buffs;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,13 +14,30 @@ namespace NinjaClass.NPCs
 
 		public bool Wound;
 		public bool Rot;
+		public bool Slowed;
 
 		public override void ResetEffects(NPC npc)
 		{
 			Wound = false;
 			Rot = false;
-	}
+			Slowed = false;
+		}
 
+		public override void NPCLoot(NPC npc)
+		{
+			Mod calamityMod = ModLoader.GetMod("CalamityMod");
+			
+			if (calamityMod != null)
+			{
+				if (npc.type == calamityMod.NPCType("CrabulonIdle"))
+				{
+					if (Main.rand.Next(3) == 0)
+						Item.NewItem(npc.getRect(), ModContent.ItemType<Items.Weapons.WoodenDagger>());
+				}
+			}
+
+			// Addtional if statements here if you would like to add drops to other vanilla npc.
+		}
 
 
 		public override void UpdateLifeRegen(NPC npc, ref int damage)
@@ -47,6 +65,25 @@ namespace NinjaClass.NPCs
 				//{
 				//	damage = 2;
 				//}
+			}
+			if (Slowed)
+			{
+				if (npc.lifeRegen > 0)
+				{
+					npc.lifeRegen = 0;
+				}
+				npc.lifeRegen -= 32;
+			}
+		}
+		public override void PostAI(NPC npc)
+		{
+			if (Slowed)
+			{
+				if (npc.boss == false)
+				{
+					npc.velocity.X = npc.velocity.X * 0.80f;
+					npc.velocity.Y = npc.velocity.Y * 0.92f;
+				}
 			}
 		}
 	}

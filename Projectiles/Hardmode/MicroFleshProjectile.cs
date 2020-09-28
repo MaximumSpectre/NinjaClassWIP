@@ -1,17 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace NinjaClass.Projectiles
+
+namespace NinjaClass.Projectiles.Hardmode
 {
-	public class PlatinumDaggerProjectile : ModProjectile
+	public class MicroFleshProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Javelin");
+			DisplayName.SetDefault("Flesh");
 		}
 
 		public override void SetDefaults()
@@ -22,6 +24,7 @@ namespace NinjaClass.Projectiles
 			projectile.thrown = true;
 			projectile.penetrate = 3;
 			projectile.hide = true;
+			projectile.timeLeft = 1500;
 		}
 
 		// See ExampleBehindTilesProjectile. 
@@ -49,10 +52,28 @@ namespace NinjaClass.Projectiles
 			drawCacheProjsBehindProjectiles.Add(index);
 		}
 
+		public override bool OnTileCollide(Vector2 oldVelocity)
+		{
+			// OnTileCollide can trigger quite quickly, so using soundDelay helps prevent the sound from overlapping too much.
+
+
+			// This code makes the projectile very bouncy.
+			if (projectile.velocity.X != oldVelocity.X && Math.Abs(oldVelocity.X) > 1f)
+			{
+				projectile.velocity.X = oldVelocity.X * -0.86f;
+			}
+			if (projectile.velocity.Y != oldVelocity.Y && Math.Abs(oldVelocity.Y) > 1f)
+			{
+				projectile.velocity.Y = oldVelocity.Y * -0.86f;
+			}
+			return false;
+		}
+
 		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
 		{
 			// For going through platforms and such, javelins use a tad smaller size
 			width = height = 10; // notice we set the width to the height, the height to 10. so both are 10
+			fallThrough = false;
 			return true;
 		}
 
@@ -127,7 +148,8 @@ namespace NinjaClass.Projectiles
 				(target.Center - projectile.Center) *
 				0.75f; // Change velocity based on delta center of targets (difference between entity centers)
 			projectile.netUpdate = true; // netUpdate this javelin
-			target.AddBuff(BuffType<Buffs.Wound>(), 60);
+			target.AddBuff(BuffType<Buffs.Slowed>(), 240);
+			
 
 			projectile.damage = 0; // Makes sure the sticking javelins do not deal damage anymore
 
@@ -149,7 +171,7 @@ namespace NinjaClass.Projectiles
 					&& currentProjectile.active // Make sure the projectile is active
 					&& currentProjectile.owner == Main.myPlayer // Make sure the projectile's owner is the client's player
 					&& currentProjectile.type == projectile.type // Make sure the projectile is of the same type as this javelin
-					&& currentProjectile.modProjectile is PlatinumDaggerProjectile daggerProjectile // Use a pattern match cast so we can access the projectile like an ExampleJavelinProjectile
+					&& currentProjectile.modProjectile is MicroFleshProjectile daggerProjectile // Use a pattern match cast so we can access the projectile like an ExampleJavelinProjectile
 					&& daggerProjectile.IsStickingToTarget // the previous pattern match allows us to use our properties
 					&& daggerProjectile.TargetWhoAmI == target.whoAmI)
 				{
@@ -184,7 +206,7 @@ namespace NinjaClass.Projectiles
 
 		// Change this number if you want to alter how the alpha changes
 		private const int ALPHA_REDUCTION = 25;
-		int deathCount = 0;
+		float deathCount = 0;
 		public override void AI()
 		{
 			UpdateAlpha();
@@ -213,27 +235,44 @@ namespace NinjaClass.Projectiles
 		private void NormalAI()
 		{
 			TargetWhoAmI++;
-			deathCount++;
-            if (deathCount >= 30)
-            {
-				projectile.Kill();
-			}
-			// For a little while, the javelin will travel with the same speed, but after this, the javelin drops velocity very quickly.
+
 			if (TargetWhoAmI >= MAX_TICKS)
 			{
 				// Change these multiplication factors to alter the javelin's movement change after reaching maxTicks
-				const float velXmult = 0.98f; // x velocity factor, every AI update the x velocity will be 98% of the original speed
-				const float velYmult = 0.14f; // y velocity factor, every AI update the y velocity will be be 0.35f bigger of the original speed, causing the javelin to drop to the ground
+				const float velXmult = 0.99f; // x velocity factor, every AI update the x velocity will be 98% of the original speed
+				const float velYmult = 0.10f; // y velocity factor, every AI update the y velocity will be be 0.35f bigger of the original speed, causing the javelin to drop to the ground
 				TargetWhoAmI = MAX_TICKS; // set ai1 to maxTicks continuously
 				projectile.velocity.X *= velXmult;
 				projectile.velocity.Y += velYmult;
 			}
+			// Rotation increased by velocity.X 
 
-			// Make sure to set the rotation accordingly to the velocity, and add some to work around the sprite's rotation
-			// Please notice the MathHelper usage, offset the rotation by 90 degrees (to radians because rotation uses radians) because the sprite's rotation is not aligned!
-			projectile.rotation =
-				projectile.velocity.ToRotation() +
-				MathHelper.ToRadians(45f);
+			deathCount += 1f;
+			if (deathCount > 5f)
+			{
+				deathCount = 10f;
+				// Roll speed dampening.
+				if (projectile.velocity.Y == 0f && projectile.velocity.X != 0f)
+				{
+					projectile.velocity.X = projectile.velocity.X * 0.96f;
+					//if (projectile.type == 29 || projectile.type == 470 || projectile.type == 637)
+					{
+						projectile.velocity.X = projectile.velocity.X * 0.99f;
+					}
+					if ((double)projectile.velocity.X > -0.01 && (double)projectile.velocity.X < 0.01)
+					{
+						projectile.velocity.X = 0f;
+						projectile.netUpdate = true;
+					}
+				}
+				projectile.velocity.Y = projectile.velocity.Y + 0.2f;
+			}
+			// Rotation increased by velocity.X 
+			projectile.rotation += projectile.velocity.X * 0.1f;
+			return;
+
+			projectile.rotation += projectile.velocity.X * 0.1f;
+			return;
 
 		}
 
@@ -242,7 +281,7 @@ namespace NinjaClass.Projectiles
 			// These 2 could probably be moved to the ModifyNPCHit hook, but in vanilla they are present in the AI
 			projectile.ignoreWater = true; // Make sure the projectile ignores water
 			projectile.tileCollide = false; // Make sure the projectile doesn't collide with tiles anymore
-			const int aiFactor = 3; // Change this factor to change the 'lifetime' of this sticking javelin
+			const int aiFactor = 4; // Change this factor to change the 'lifetime' of this sticking javelin
 			projectile.localAI[0] += 1f;
 
 			// Every 30 ticks, the javelin will perform a hit effect
