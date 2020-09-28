@@ -6,26 +6,27 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
+using NinjaClass.Projectiles.Hardmode;
 
-namespace NinjaClass.Items.Weapons
+namespace NinjaClass.Items.Weapons.Hardmode
 {
 	// This class handles everything for our custom damage class
 	// Any class that we wish to be using our custom damage class will derive from this class, instead of ModItem
-	public class StingingNettle : NinjaItem
+	public class MicroFlesh : NinjaItem
 	{
 		// Custom items should override this to set their defaults
 		public virtual void SafeSetDefaults()
 		{
-			item.shootSpeed = 15f;
-			item.damage = 13;
-			item.knockBack = 1.2f;
+			item.shootSpeed = 6f;
+			item.damage = 26;
+			item.knockBack = 0.2f;
 			item.useStyle = 1;
-			item.useAnimation = 12;
-			item.useTime = 12;
-			item.width = 24;
-			item.height = 24;
+			item.useAnimation = 42;
+			item.useTime = 42;
+			item.width = 30;
+			item.height = 30;
 			item.maxStack = 1;
-			item.rare = 3;
+			item.rare = 4;
 
 			item.consumable = false;
 			item.noUseGraphic = true;
@@ -34,10 +35,10 @@ namespace NinjaClass.Items.Weapons
 			item.thrown = true;
 
 			item.UseSound = SoundID.Item1;
-			item.value = Item.sellPrice(silver: 62);
+			item.value = Item.sellPrice(silver: 5);
 			// Look at the javelin projectile for a lot of custom code
 			// If you are in an editor like Visual Studio, you can hold CTRL and Click ExampleJavelinProjectile
-			item.shoot = ProjectileType<StingingNettleProjectile>();
+			item.shoot = ProjectileType<MicroFleshProjectile>();
 		}
 
 		// By making the override sealed, we prevent derived classes from further overriding the method and enforcing the use of SafeSetDefaults()
@@ -46,20 +47,8 @@ namespace NinjaClass.Items.Weapons
 		{
 			SafeSetDefaults();
 			// all vanilla damage types must be false for custom damage types to work
-
 		}
 
 		// As a modder, you could also opt to make these overrides also sealed. Up to the modder
-		
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Vine, 4);
-			recipe.AddIngredient(ItemID.Stinger, 8);
-			recipe.AddIngredient(ItemID.BeeWax, 6);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-		}
 	}
 }

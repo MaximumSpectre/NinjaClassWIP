@@ -26,7 +26,7 @@ namespace NinjaClass.Items.Armor
 
 		public override void UpdateEquip(Player player) {
 			NinjaDamagePlayer.ModPlayer(player).NinjaCrit += 5;
-			NinjaDamagePlayer.ModPlayer(player).NinjaKnockback += 4;
+			NinjaDamagePlayer.ModPlayer(player).NinjaKnockback *= 1.15f;
 			player.moveSpeed += 0.03f;
 		}
 		public override void DrawHands(ref bool drawHands, ref bool drawArms)
