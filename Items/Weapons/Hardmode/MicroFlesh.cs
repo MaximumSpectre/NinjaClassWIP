@@ -35,7 +35,7 @@ namespace NinjaClass.Items.Weapons.Hardmode
 			item.thrown = true;
 
 			item.UseSound = SoundID.Item1;
-			item.value = Item.sellPrice(silver: 5);
+			item.value = Item.sellPrice(gold: 5);
 			// Look at the javelin projectile for a lot of custom code
 			// If you are in an editor like Visual Studio, you can hold CTRL and Click ExampleJavelinProjectile
 			item.shoot = ProjectileType<MicroFleshProjectile>();

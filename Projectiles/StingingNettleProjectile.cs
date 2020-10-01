@@ -1,4 +1,4 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -11,7 +11,7 @@ namespace NinjaClass.Projectiles
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Kunai");
+			DisplayName.SetDefault("Nettle");
 		}
 
 		public override void SetDefaults()
@@ -214,7 +214,7 @@ namespace NinjaClass.Projectiles
 		{
 			TargetWhoAmI++;
 			deathCount++;
-            if (deathCount >= 34)
+            if (deathCount >= 54)
             {
 				projectile.Kill();
 			}
