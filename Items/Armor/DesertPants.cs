@@ -11,8 +11,8 @@ namespace NinjaClass.Items.Armor
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("4% increased movement speed" +
-				"\n5% increased ninja damage");
+			Tooltip.SetDefault("3% increased movement speed" +
+				"\n2% increased ninja damage");
 
 		}
 
@@ -21,12 +21,12 @@ namespace NinjaClass.Items.Armor
 			item.height = 18;
 			item.value = 10000;
 			item.rare = 0;
-			item.defense = 4;
+			item.defense = 3;
 		}
 
 		public override void UpdateEquip(Player player) {
-			player.moveSpeed += 0.04f;
-			NinjaDamagePlayer.ModPlayer(player).NinjaDamageAdd += 0.05f;
+			player.moveSpeed += 0.03f;
+			NinjaDamagePlayer.ModPlayer(player).NinjaDamageAdd += 0.02f;
 		}
 		public override void AddRecipes()
 		{

@@ -10,8 +10,8 @@ namespace NinjaClass.Items.Armor
 	public class DesertMask : ModItem
 	{
 		public override void SetStaticDefaults() {
-			Tooltip.SetDefault("4% increased movement speed" +
-				"\n5% increased ninja damage");
+			Tooltip.SetDefault("2% increased movement speed" +
+				"\n3% increased ninja damage");
 			
 		}
 
@@ -32,6 +32,7 @@ namespace NinjaClass.Items.Armor
 		{
 			player.setBonus = "desert double jump";
 			player.doubleJumpSandstorm = true;
+			player.GetModPlayer<NinjaPlayer>().NinjaItemWorn = true;
 			/* Here are the individual weapon class bonuses.
 			player.meleeDamage -= 0.2f;
 			player.thrownDamage -= 0.2f;
@@ -48,8 +49,8 @@ namespace NinjaClass.Items.Armor
 
 		public override void UpdateEquip(Player player)
 		{
-			NinjaDamagePlayer.ModPlayer(player).NinjaDamageAdd += 0.05f;
-			player.moveSpeed += 0.04f;
+			NinjaDamagePlayer.ModPlayer(player).NinjaDamageAdd += 0.03f;
+			player.moveSpeed += 0.02f;
 
 		}
 

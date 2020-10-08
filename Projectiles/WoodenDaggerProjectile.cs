@@ -86,7 +86,7 @@ namespace NinjaClass.Projectiles
 			for (int i = 0; i < NUM_DUSTS; i++)
 			{
 				// Create a new dust
-				Dust dust = Dust.NewDustDirect(usePos, projectile.width, projectile.height, 81);
+				Dust dust = Dust.NewDustDirect(usePos, projectile.width, projectile.height, 215);
 				dust.position = (dust.position + projectile.Center) / 2f;
 				dust.velocity += rotVector * 2f;
 				dust.velocity *= 0.5f;

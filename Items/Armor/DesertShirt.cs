@@ -21,7 +21,7 @@ namespace NinjaClass.Items.Armor
 			item.height = 18;
 			item.value = 10000;
 			item.rare = 0;
-			item.defense = 5;
+			item.defense = 4;
 		}
 
 		public override void UpdateEquip(Player player) {
