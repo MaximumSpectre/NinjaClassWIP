@@ -36,11 +36,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jorda\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\AssassinClass\\AssassinClass.csproj",
+      "projectUniqueName": "C:\\Users\\jorda\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\NinjaClass\\NinjaClass.csproj",
       "projectName": "NinjaClass",
-      "projectPath": "C:\\Users\\jorda\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\AssassinClass\\AssassinClass.csproj",
+      "projectPath": "C:\\Users\\jorda\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\NinjaClass\\NinjaClass.csproj",
       "packagesPath": "C:\\Users\\jorda\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jorda\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\AssassinClass\\obj\\",
+      "outputPath": "C:\\Users\\jorda\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\NinjaClass\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\jorda\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -6,13 +6,13 @@ using Terraria.Utilities;
 using Microsoft.Xna.Framework;
 using System;
 using static Terraria.ModLoader.ModContent;
+using NinjaClass.Items.Weapons.Phaseshivs;
 
 namespace NinjaClass.Items
 {
     public abstract class NinjaItem : ModItem
     {
         internal Player player;
-        
 
         public override void SetDefaults()
         {
@@ -88,5 +88,6 @@ namespace NinjaClass.Items
                 tt.text = damageValue + " ninja " + damageWord;
             }
         }
+
     }
 }
