@@ -22,6 +22,8 @@ namespace NinjaClass.Projectiles
 			projectile.thrown = true;
 			projectile.penetrate = 3;
 			projectile.hide = true;
+            projectile.usesLocalNPCImmunity = true;
+            projectile.localNPCHitCooldown = 10;
 		}
 
 		// See ExampleBehindTilesProjectile. 
@@ -127,9 +129,24 @@ namespace NinjaClass.Projectiles
 				(target.Center - projectile.Center) *
 				0.75f; // Change velocity based on delta center of targets (difference between entity centers)
 			projectile.netUpdate = true; // netUpdate this javelin
-			target.AddBuff(BuffType<Buffs.Wound>(), 60);
-
-			projectile.damage = 0; // Makes sure the sticking javelins do not deal damage anymore
+			target.AddBuff(20, 120);
+            if (projectile.damage >= 1)
+            {
+                if (Main.player[projectile.owner].strongBees == true && Main.rand.NextBool(3))
+                {
+                    int hesinthebuilding = Projectile.NewProjectile(projectile.position.X, projectile.position.Y, projectile.velocity.X, projectile.velocity.Y,
+                            566, projectile.damage / 2, 4f, projectile.owner, 0.0f, 0.0f); 
+                    Main.projectile[hesinthebuilding].thrown = true;
+                Main.projectile[hesinthebuilding].usesLocalNPCImmunity = true;
+            Main.projectile[hesinthebuilding].localNPCHitCooldown = 10;
+                }
+             int oprahbeesdotgif = Projectile.NewProjectile(projectile.position.X, projectile.position.Y, projectile.velocity.X / 2, projectile.velocity.Y / 2,
+                            181, projectile.damage / 3, 2f, projectile.owner, 0.0f, 0.0f);   
+                Main.projectile[oprahbeesdotgif].thrown = true;
+                Main.projectile[oprahbeesdotgif].usesLocalNPCImmunity = true;
+            Main.projectile[oprahbeesdotgif].localNPCHitCooldown = 10;
+                			projectile.damage = 0; // Makes sure the sticking javelins do not deal damage anymore
+            }
 
 			// It is recommended to split your code into separate methods to keep code clean and clear
 			UpdateStickyJavelins(target);
