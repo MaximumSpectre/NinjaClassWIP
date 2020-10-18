@@ -100,7 +100,7 @@ namespace NinjaClass
 					}
 					else if (player.HasBuff(mod.BuffType("NinjaMastery")))
 					{
-						player.AddBuff(BuffType<Buffs.MegaAttack>(), 300);
+						player.AddBuff(BuffType<Buffs.MegaAttack>(), 600);
 					}
 					else if (player.HasBuff(mod.BuffType("MegaAttack")))
 					{

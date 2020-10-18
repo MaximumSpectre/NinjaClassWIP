@@ -21,7 +21,7 @@ namespace NinjaClass.Items.Weapons.Phaseshivs
 		public override void SetDefaults()
 		{
 			item.shootSpeed = 13.5f;// speed of the projectile
-			item.damage = 20;// damage of the weapon
+			item.damage = 18;// damage of the weapon
 			item.knockBack = 1.2f;// knockback of the weapon
 			item.useStyle = 1;// the way the player animates
 			item.useAnimation = 26;// the time of the throw animation

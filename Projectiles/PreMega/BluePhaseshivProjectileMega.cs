@@ -13,7 +13,7 @@ namespace NinjaClass.Projectiles.PreMega
 		public int duration = 50;                // the time the projectile stays in the air
 		public int penetration = 5;             // how many eneemies the projectile penetrate
 		public const float drag = 0.98f;            // the drag of the projectile
-		public const float gravity = 0.16f;      // the gravity of the projectile
+		public const float gravity = 0.17f;      // the gravity of the projectile
 		public int gravityStrength = 3;         // the strength of of the gravity added per frame, 1 for default
 		private const int MAX_TICKS = 4;        // how long untill gravity is turned on
 		public int killDust = 88;                   // which dust used when it dies

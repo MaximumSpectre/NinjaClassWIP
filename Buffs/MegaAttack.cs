@@ -19,8 +19,6 @@ namespace NinjaClass.Buffs
 		}
 
 		public override void Update(Player player, ref int buffIndex) {
-			NinjaDamagePlayer.ModPlayer(player).NinjaDamageMult += 10f;
-			NinjaDamagePlayer.ModPlayer(player).NinjaKnockback *= 2;
 			if (player.HasBuff(mod.BuffType("CMegaAttack")))
 			{
 				player.DelBuff(buffIndex);

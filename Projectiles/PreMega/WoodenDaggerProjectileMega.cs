@@ -10,6 +10,13 @@ namespace NinjaClass.Projectiles.PreMega
 {
 	public class WoodenDaggerProjectileMega : ModProjectile
 	{
+		public int duration = 50;                // the time the projectile stays in the air
+		public int penetration = 3;             // how many eneemies the projectile penetrate
+		public const float drag = 0.98f;            // the drag of the projectile
+		public const float gravity = 0.17f;      // the gravity of the projectile
+		public float gravityStrength = 1.2f;         // the strength of of the gravity added per frame, 1 for default
+		private const int MAX_TICKS = 4;        // how long untill gravity is turned on
+		public int killDust = 88;                   // which dust used when it dies
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Dagger");
@@ -17,11 +24,11 @@ namespace NinjaClass.Projectiles.PreMega
 
 		public override void SetDefaults()
 		{
-			projectile.width = 30;
-			projectile.height = 30;
+			projectile.width = 26;
+			projectile.height = 26;
 			projectile.friendly = true;
 			projectile.thrown = true;
-			projectile.penetrate = 3;
+			projectile.penetrate = penetration;
 			projectile.hide = true;
 		}
 
@@ -181,42 +188,30 @@ namespace NinjaClass.Projectiles.PreMega
 
 		// Added these 2 constant to showcase how you could make AI code cleaner by doing this
 		// Change this number if you want to alter how long the javelin can travel at a constant speed
-		private const int MAX_TICKS = 4;
 
 		// Change this number if you want to alter how the alpha changes
-		private const int ALPHA_REDUCTION = 25;
 		int deathCount = 0;
+		int firstframe = 0;
 		public override void AI()
 		{
-			UpdateAlpha();
+			if (firstframe == 0)
+			{
+				projectile.velocity *= 1.3f;
+				projectile.damage *= 8;
+				firstframe = 1;
+			}
 			// Run either the Sticky AI or Normal AI
 			// Separating into different methods helps keeps your AI clean
 			if (IsStickingToTarget) StickyAI();
 			else NormalAI();
 			Lighting.AddLight(projectile.Center, 0.19f, 0.80f, 0.19f);
-
-		}
-
-		private void UpdateAlpha()
-		{
-			// Slowly remove alpha as it is present
-			if (projectile.alpha > 0)
-			{
-				projectile.alpha -= ALPHA_REDUCTION;
-			}
-
-			// If alpha gets lower than 0, set it to 0
-			if (projectile.alpha < 0)
-			{
-				projectile.alpha = 0;
-			}
 		}
 
 		private void NormalAI()
 		{
 			TargetWhoAmI++;
 			deathCount++;
-            if (deathCount >= 40)
+            if (deathCount >= duration)
             {
 				projectile.Kill();
 			}
@@ -224,11 +219,11 @@ namespace NinjaClass.Projectiles.PreMega
 			if (TargetWhoAmI >= MAX_TICKS)
 			{
 				// Change these multiplication factors to alter the javelin's movement change after reaching maxTicks
-				const float velXmult = 0.985f; // x velocity factor, every AI update the x velocity will be 98% of the original speed
-				const float velYmult = 0.15f; // y velocity factor, every AI update the y velocity will be be 0.35f bigger of the original speed, causing the javelin to drop to the ground
+				const float velXmult = drag; // x velocity factor, every AI update the x velocity will be 98% of the original speed
+				const float velYmult = gravity; // y velocity factor, every AI update the y velocity will be be 0.35f bigger of the original speed, causing the javelin to drop to the ground
 				TargetWhoAmI = MAX_TICKS; // set ai1 to maxTicks continuously
 				projectile.velocity.X *= velXmult;
-				projectile.velocity.Y += velYmult;
+				projectile.velocity.Y += (velYmult / gravityStrength);
 			}
 
 			// Make sure to set the rotation accordingly to the velocity, and add some to work around the sprite's rotation
@@ -244,7 +239,6 @@ namespace NinjaClass.Projectiles.PreMega
 			{
 				projectile.rotation += (MathHelper.Pi + MathHelper.ToRadians(-90f));
 			}
-
 			if (Main.rand.NextBool(3))
 			{
 				Dust dust = Dust.NewDustDirect(projectile.position, projectile.height, projectile.width, 163,
@@ -261,7 +255,6 @@ namespace NinjaClass.Projectiles.PreMega
 				dust.velocity *= 0.5f;
 				dust.noGravity = true;
 			}
-
 		}
 
 		private void StickyAI()

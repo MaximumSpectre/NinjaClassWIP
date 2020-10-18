@@ -1,38 +1,37 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
-using System.Security.Cryptography.X509Certificates;
-using System;
 
-namespace NinjaClass.Projectiles
+namespace NinjaClass.Projectiles.Kunai
 {
-	public class StingingNettleProjectile : ModProjectile
+	public class CactusSpineProjectile : ModProjectile
 	{
-		public int duration = 56;                // the time the projectile stays in the air
+		public int duration = 34;                // the time the projectile stays in the air
 		public int penetration = 3;             // how many eneemies the projectile penetrate
 		public const float drag = 0.98f;            // the drag of the projectile
-		public const float gravity = 0.16f;      // the gravity of the projectile
-		public float gravityStrength = 1f;         // the strength of of the gravity added per frame, 1 for default. higher number = weaker gravity
-		private const int MAX_TICKS = 4;        // how long untill gravity is turned on
+		public const float gravity = 0.20f;      // the gravity of the projectile
+		public float gravityStrength = 1.2f;         // the strength of of the gravity added per frame, 1 for default
+		private const int MAX_TICKS = 2;        // how long untill gravity is turned on
 		public int killDust = 88;                   // which dust used when it dies
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Nettle");
+			DisplayName.SetDefault("Spine");
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = 32;
-			projectile.height = 32;
+			projectile.width = 10;
+			projectile.height = 10;
 			projectile.friendly = true;
 			projectile.thrown = true;
 			projectile.penetrate = penetration;
 			projectile.hide = true;
 			projectile.usesLocalNPCImmunity = true;
-			projectile.localNPCHitCooldown = 10;
+			projectile.localNPCHitCooldown = 3; // 1 hit per npc max
+			projectile.localNPCHitCooldown = 15;
 		}
 
 		// See ExampleBehindTilesProjectile. 
@@ -77,7 +76,7 @@ namespace NinjaClass.Projectiles
 			// Return if the hitboxes intersects, which means the javelin collides or not
 			return projHitbox.Intersects(targetHitbox);
 		}
-		bool hasSpawned = false;
+
 		public override void Kill(int timeLeft)
 		{
 			Main.PlaySound(0, (int)projectile.position.X, (int)projectile.position.Y); // Play a death sound
@@ -92,40 +91,7 @@ namespace NinjaClass.Projectiles
 			// It is however recommended to define it outside method scope if used elswhere as well
 			// They are useful to make numbers that don't change more descriptive
 			const int NUM_DUSTS = 5;
-			Vector2 center;
-			float angle;
-			Vector2 tar;
-			/*if (Main.rand.Next(2) == 0)
-			{
-				if (hasSpawned == false)
-				{
-					hasSpawned = true;
-					for (int i = 0; i < (Main.rand.Next(2) + 1); i++)
-					{
-						// Where dagger appears
 
-
-						angle = Main.rand.Next(360) * 0.0174f;
-						//center.X += (float)System.Math.Sin(angle) * 200;
-						//center.Y += (float)System.Math.Cos(angle) * 200;
-
-						center.X = projectile.position.X;
-						center.Y = projectile.position.Y;
-
-						tar.X = projectile.position.X;
-						tar.Y = projectile.position.Y;
-
-						tar.Normalize();
-						tar.X += (float)System.Math.Sin(angle) * 200;
-						tar.Y += (float)System.Math.Cos(angle) * 200;
-						tar.Normalize();
-						tar *= 3; // speed
-								  //tar.X -= (tar.X / 2) * 2  ;
-								  //Projectile.NewProjectile(center.X, center.Y, tar.X, tar.Y, mod.ProjectileType("FrostShankProjectile"), (int)(damage * 0.50f), knockback, projectile.owner, 0f, 0f);
-						Projectile.NewProjectile(center.X, center.Y, tar.X, tar.Y, ProjectileID.Bee, (int)(initialDamage * 0.80f), projectile.knockBack, projectile.owner, 0f, 0f);
-					}  // last 0f,0f, this is projectile.ai[0] and projectile.ai[1] where you can put timer, angle, or the target.a
-				}
-			}*/
 			// Spawn some dusts upon javelin death
 			for (int i = 0; i < NUM_DUSTS; i++)
 			{
@@ -160,7 +126,7 @@ namespace NinjaClass.Projectiles
 			set => projectile.ai[1] = value;
 		}
 
-		private const int MAX_STICKY_JAVELINS = 3; // This is the max. amount of javelins being able to attach
+		private const int MAX_STICKY_JAVELINS = 15; // This is the max. amount of javelins being able to attach
 		private readonly Point[] _stickingJavelins = new Point[MAX_STICKY_JAVELINS]; // The point array holding for sticking javelins
 
 		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
@@ -172,25 +138,8 @@ namespace NinjaClass.Projectiles
 				0.75f; // Change velocity based on delta center of targets (difference between entity centers)
 			projectile.netUpdate = true; // netUpdate this javelin
 
-			target.AddBuff(20, 120);
-			if (projectile.damage >= 1)
-			{
-				if (Main.player[projectile.owner].strongBees == true && Main.rand.NextBool(3))
-				{
-					int hesinthebuilding = Projectile.NewProjectile(projectile.position.X, projectile.position.Y, projectile.velocity.X, projectile.velocity.Y,
-							566, projectile.damage / 2, 4f, projectile.owner, 0.0f, 0.0f);
-					Main.projectile[hesinthebuilding].thrown = true;
-					Main.projectile[hesinthebuilding].usesLocalNPCImmunity = true;
-					Main.projectile[hesinthebuilding].localNPCHitCooldown = 10;
-				}
-				int oprahbeesdotgif = Projectile.NewProjectile(projectile.position.X, projectile.position.Y, projectile.velocity.X / 2, projectile.velocity.Y / 2,
-							   181, projectile.damage / 3, 2f, projectile.owner, 0.0f, 0.0f);
-				Main.projectile[oprahbeesdotgif].thrown = true;
-				Main.projectile[oprahbeesdotgif].usesLocalNPCImmunity = true;
-				Main.projectile[oprahbeesdotgif].localNPCHitCooldown = 10;
-				projectile.damage = 0; // Makes sure the sticking javelins do not deal damage anymore
-			}
-			//projectile.damage = 0; // Makes sure the sticking javelins do not deal damage anymore
+
+			projectile.damage = 0; // Makes sure the sticking javelins do not deal damage anymore
 
 			// It is recommended to split your code into separate methods to keep code clean and clear
 			UpdateStickyJavelins(target);
@@ -210,7 +159,7 @@ namespace NinjaClass.Projectiles
 					&& currentProjectile.active // Make sure the projectile is active
 					&& currentProjectile.owner == Main.myPlayer // Make sure the projectile's owner is the client's player
 					&& currentProjectile.type == projectile.type // Make sure the projectile is of the same type as this javelin
-					&& currentProjectile.modProjectile is StingingNettleProjectile daggerProjectile // Use a pattern match cast so we can access the projectile like an ExampleJavelinProjectile
+					&& currentProjectile.modProjectile is CactusSpineProjectile daggerProjectile // Use a pattern match cast so we can access the projectile like an ExampleJavelinProjectile
 					&& daggerProjectile.IsStickingToTarget // the previous pattern match allows us to use our properties
 					&& daggerProjectile.TargetWhoAmI == target.whoAmI)
 				{
@@ -244,15 +193,8 @@ namespace NinjaClass.Projectiles
 
 		// Change this number if you want to alter how the alpha changes
 		int deathCount = 0;
-		int firstframe = 0;
-		int initialDamage = 0;
 		public override void AI()
 		{
-			if (firstframe == 0)
-			{
-				initialDamage = projectile.damage;
-				firstframe = 1;
-			}
 			// Run either the Sticky AI or Normal AI
 			// Separating into different methods helps keeps your AI clean
 			if (IsStickingToTarget) StickyAI();
@@ -264,8 +206,8 @@ namespace NinjaClass.Projectiles
 		{
 			TargetWhoAmI++;
 			deathCount++;
-			if (deathCount >= duration)
-			{
+            if (deathCount >= duration)
+            {
 				projectile.Kill();
 			}
 			// For a little while, the javelin will travel with the same speed, but after this, the javelin drops velocity very quickly.

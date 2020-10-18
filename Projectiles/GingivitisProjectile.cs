@@ -127,8 +127,10 @@ namespace NinjaClass.Projectiles
 				(target.Center - projectile.Center) *
 				0.75f; // Change velocity based on delta center of targets (difference between entity centers)
 			projectile.netUpdate = true; // netUpdate this javelin
-			target.AddBuff(BuffType<Buffs.Rot>(), 120);
-
+			if (Main.rand.Next(3) == 0) // the chance
+			{
+				target.AddBuff(BuffType<Buffs.Rot>(), (30+ Main.rand.Next(90)));
+			}
 			projectile.damage = 0; // Makes sure the sticking javelins do not deal damage anymore
 
 			// It is recommended to split your code into separate methods to keep code clean and clear

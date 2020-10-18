@@ -9,6 +9,13 @@ namespace NinjaClass.Projectiles
 {
 	public class CavityProjectile : ModProjectile
 	{
+		public int duration = 40;                // the time the projectile stays in the air
+		public int penetration = 3;             // how many eneemies the projectile penetrate
+		public const float drag = 0.99f;            // the drag of the projectile
+		public const float gravity = 0.18f;      // the gravity of the projectile
+		public float gravityStrength = 1f;         // the strength of of the gravity added per frame, 1 for default
+		private const int MAX_TICKS = 4;        // how long untill gravity is turned on
+		public int killDust = 88;                   // which dust used when it dies
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Tooth");
@@ -16,11 +23,11 @@ namespace NinjaClass.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
+			projectile.width = 26;
+			projectile.height = 26;
 			projectile.friendly = true;
 			projectile.thrown = true;
-			projectile.penetrate = 3;
+			projectile.penetrate = penetration;
 			projectile.hide = true;
 		}
 
@@ -86,7 +93,7 @@ namespace NinjaClass.Projectiles
 			for (int i = 0; i < NUM_DUSTS; i++)
 			{
 				// Create a new dust
-				Dust dust = Dust.NewDustDirect(usePos, projectile.width, projectile.height, 81);
+				Dust dust = Dust.NewDustDirect(usePos, projectile.width, projectile.height, 215);
 				dust.position = (dust.position + projectile.Center) / 2f;
 				dust.velocity += rotVector * 2f;
 				dust.velocity *= 0.5f;
@@ -127,7 +134,10 @@ namespace NinjaClass.Projectiles
 				(target.Center - projectile.Center) *
 				0.75f; // Change velocity based on delta center of targets (difference between entity centers)
 			projectile.netUpdate = true; // netUpdate this javelin
-			target.AddBuff(BuffType<Buffs.Rot>(), 120);
+			if (Main.rand.Next(3) == 0) // the chance
+			{
+				target.AddBuff(BuffType<Buffs.Rot>(), (30 + Main.rand.Next(90)));
+			}
 
 			projectile.damage = 0; // Makes sure the sticking javelins do not deal damage anymore
 
@@ -149,7 +159,7 @@ namespace NinjaClass.Projectiles
 					&& currentProjectile.active // Make sure the projectile is active
 					&& currentProjectile.owner == Main.myPlayer // Make sure the projectile's owner is the client's player
 					&& currentProjectile.type == projectile.type // Make sure the projectile is of the same type as this javelin
-					&& currentProjectile.modProjectile is CavityProjectile daggerProjectile // Use a pattern match cast so we can access the projectile like an ExampleJavelinProjectile
+					&& currentProjectile.modProjectile is WoodenDaggerProjectile daggerProjectile // Use a pattern match cast so we can access the projectile like an ExampleJavelinProjectile
 					&& daggerProjectile.IsStickingToTarget // the previous pattern match allows us to use our properties
 					&& daggerProjectile.TargetWhoAmI == target.whoAmI)
 				{
@@ -180,14 +190,11 @@ namespace NinjaClass.Projectiles
 
 		// Added these 2 constant to showcase how you could make AI code cleaner by doing this
 		// Change this number if you want to alter how long the javelin can travel at a constant speed
-		private const int MAX_TICKS = 4;
 
 		// Change this number if you want to alter how the alpha changes
-		private const int ALPHA_REDUCTION = 25;
 		int deathCount = 0;
 		public override void AI()
 		{
-			UpdateAlpha();
 			// Run either the Sticky AI or Normal AI
 			// Separating into different methods helps keeps your AI clean
 			if (IsStickingToTarget) StickyAI();
@@ -195,38 +202,23 @@ namespace NinjaClass.Projectiles
 
 		}
 
-		private void UpdateAlpha()
-		{
-			// Slowly remove alpha as it is present
-			if (projectile.alpha > 0)
-			{
-				projectile.alpha -= ALPHA_REDUCTION;
-			}
-
-			// If alpha gets lower than 0, set it to 0
-			if (projectile.alpha < 0)
-			{
-				projectile.alpha = 0;
-			}
-		}
-
 		private void NormalAI()
 		{
 			TargetWhoAmI++;
 			deathCount++;
-            if (deathCount >= 40)
-            {
+			if (deathCount >= duration)
+			{
 				projectile.Kill();
 			}
 			// For a little while, the javelin will travel with the same speed, but after this, the javelin drops velocity very quickly.
 			if (TargetWhoAmI >= MAX_TICKS)
 			{
 				// Change these multiplication factors to alter the javelin's movement change after reaching maxTicks
-				const float velXmult = 0.99f; // x velocity factor, every AI update the x velocity will be 98% of the original speed
-				const float velYmult = 0.06f; // y velocity factor, every AI update the y velocity will be be 0.35f bigger of the original speed, causing the javelin to drop to the ground
+				const float velXmult = drag; // x velocity factor, every AI update the x velocity will be 98% of the original speed
+				const float velYmult = gravity; // y velocity factor, every AI update the y velocity will be be 0.35f bigger of the original speed, causing the javelin to drop to the ground
 				TargetWhoAmI = MAX_TICKS; // set ai1 to maxTicks continuously
 				projectile.velocity.X *= velXmult;
-				projectile.velocity.Y += velYmult;
+				projectile.velocity.Y += (velYmult / gravityStrength);
 			}
 
 			// Make sure to set the rotation accordingly to the velocity, and add some to work around the sprite's rotation

@@ -9,18 +9,25 @@ namespace NinjaClass.Projectiles
 {
 	public class WoodenDaggerProjectile : ModProjectile
 	{
+		public int duration = 42;                // the time the projectile stays in the air
+		public int penetration = 3;             // how many eneemies the projectile penetrate
+		public const float drag = 0.98f;            // the drag of the projectile
+		public const float gravity = 0.17f;      // the gravity of the projectile
+		public float gravityStrength = 1.2f;         // the strength of of the gravity added per frame, 1 for default
+		private const int MAX_TICKS = 4;        // how long untill gravity is turned on
+		public int killDust = 88;                   // which dust used when it dies
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Javelin");
+			DisplayName.SetDefault("Dagger");
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
+			projectile.width = 26;
+			projectile.height = 26;
 			projectile.friendly = true;
 			projectile.thrown = true;
-			projectile.penetrate = 3;
+			projectile.penetrate = penetration;
 			projectile.hide = true;
 		}
 
@@ -180,14 +187,11 @@ namespace NinjaClass.Projectiles
 
 		// Added these 2 constant to showcase how you could make AI code cleaner by doing this
 		// Change this number if you want to alter how long the javelin can travel at a constant speed
-		private const int MAX_TICKS = 4;
 
 		// Change this number if you want to alter how the alpha changes
-		private const int ALPHA_REDUCTION = 25;
 		int deathCount = 0;
 		public override void AI()
 		{
-			UpdateAlpha();
 			// Run either the Sticky AI or Normal AI
 			// Separating into different methods helps keeps your AI clean
 			if (IsStickingToTarget) StickyAI();
@@ -195,26 +199,11 @@ namespace NinjaClass.Projectiles
 
 		}
 
-		private void UpdateAlpha()
-		{
-			// Slowly remove alpha as it is present
-			if (projectile.alpha > 0)
-			{
-				projectile.alpha -= ALPHA_REDUCTION;
-			}
-
-			// If alpha gets lower than 0, set it to 0
-			if (projectile.alpha < 0)
-			{
-				projectile.alpha = 0;
-			}
-		}
-
 		private void NormalAI()
 		{
 			TargetWhoAmI++;
 			deathCount++;
-            if (deathCount >= 35)
+            if (deathCount >= duration)
             {
 				projectile.Kill();
 			}
@@ -222,11 +211,11 @@ namespace NinjaClass.Projectiles
 			if (TargetWhoAmI >= MAX_TICKS)
 			{
 				// Change these multiplication factors to alter the javelin's movement change after reaching maxTicks
-				const float velXmult = 0.98f; // x velocity factor, every AI update the x velocity will be 98% of the original speed
-				const float velYmult = 0.17f; // y velocity factor, every AI update the y velocity will be be 0.35f bigger of the original speed, causing the javelin to drop to the ground
+				const float velXmult = drag; // x velocity factor, every AI update the x velocity will be 98% of the original speed
+				const float velYmult = gravity; // y velocity factor, every AI update the y velocity will be be 0.35f bigger of the original speed, causing the javelin to drop to the ground
 				TargetWhoAmI = MAX_TICKS; // set ai1 to maxTicks continuously
 				projectile.velocity.X *= velXmult;
-				projectile.velocity.Y += velYmult;
+				projectile.velocity.Y += (velYmult / gravityStrength);
 			}
 
 			// Make sure to set the rotation accordingly to the velocity, and add some to work around the sprite's rotation

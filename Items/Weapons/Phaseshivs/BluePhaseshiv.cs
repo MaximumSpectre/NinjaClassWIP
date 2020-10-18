@@ -13,9 +13,6 @@ namespace NinjaClass.Items.Weapons.Phaseshivs{
 	public class BluePhaseshiv : NinjaItem{
 		public string Projectile = "BluePhaseshivProjectile";			// the main projectile
 		public string MegaProjectile = "BluePhaseshivProjectileMega";   // the MEGA projectile
-		// this is where you add the recipie of the item
-
-
 		public override void SetDefaults(){
 			item.shootSpeed = 13.5f;// speed of the projectile
 			item.damage = 18;// damage of the weapon
