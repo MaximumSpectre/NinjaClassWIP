@@ -1,116 +1,66 @@
-using NinjaClass.Projectiles;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
+using Terraria.Utilities;
 using Terraria.ModLoader;
+using System;
 using static Terraria.ModLoader.ModContent;
 using NinjaClass.Projectiles.PreMega;
 
 namespace NinjaClass.Items.Weapons
 {
-	// This class handles everything for our custom damage class
-	// Any class that we wish to be using our custom damage class will derive from this class, instead of ModItem
-	public class GoldDagger : NinjaItem
-	{
-		// Custom items should override this to set their defaults
-		public virtual void SafeSetDefaults()
-		{
-			item.shootSpeed = 10.5f;
-			item.damage = 16;
-			item.knockBack = 3.2f;
-			item.useStyle = 1;
-			item.useAnimation = 25;
-			item.useTime = 25;
-			item.width = 30;
-			item.height = 30;
-			item.maxStack = 1;
-			item.rare = 0;
-
-			item.consumable = false;
-			item.noUseGraphic = true;
-			item.noMelee = true;
-			item.autoReuse = true;
-			item.thrown = true;
-
-			item.UseSound = SoundID.Item1;
-			item.value = Item.sellPrice(silver: 5);
-			// Look at the javelin projectile for a lot of custom code
-			// If you are in an editor like Visual Studio, you can hold CTRL and Click ExampleJavelinProjectile
-			item.shoot = ProjectileType<GoldDaggerProjectile>();
-		}
-
-		public sealed override void SetDefaults()
-		{
-			SafeSetDefaults();
-			// all vanilla damage types must be false for custom damage types to work
-
-		}
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.GoldBar, 8);
-			recipe.AddTile(TileID.Anvils);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-		}
-		public override bool AltFunctionUse(Player player)
-		{
-			if (player.HasBuff(mod.BuffType("NinjaExausted")))
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
-		}
-
-		public override bool CanUseItem(Player player)
-		{
-			if (player.altFunctionUse == 2)
-			{
-				if (player.HasBuff(mod.BuffType("NinjaExausted")))
-				{
-
-				}
-				else
-				{
-					player.AddBuff(BuffType<Buffs.NinjaDodge>(), 15);
-					player.AddBuff(BuffType<Buffs.NinjaExausted>(), 600);
-					for (int d = 0; d < 70; d++)
-					{
-						Dust dust = Dust.NewDustDirect(player.position, player.width, player.height, 31, 0f, 0f, 150, default(Color), 1.6f);
-						dust.velocity /= 1.6f;
-						//dust.noGravity = true;
-					}
-				}
-				item.shoot = ProjectileID.None;
-
-
-			}
-			else if (player.HasBuff(mod.BuffType("MegaAttack")))
-			{
-				item.shootSpeed = 10.5f;
-				item.shootSpeed = item.shootSpeed * 1.2f;
-				item.knockBack = 3.2f;
-				item.knockBack = item.knockBack * 2;
-				item.shoot = ProjectileType<GoldDaggerProjectileMega>();
-				player.AddBuff(BuffType<Buffs.CMegaAttack>(), 1);
-			}
-			else
-			{
-				item.shootSpeed = 10.5f;
-				item.knockBack = 3.2f;
-				item.shoot = ProjectileType<GoldDaggerProjectile>();
-			}
-			return base.CanUseItem(player);
-		}
-
-		public override void OnHitNPC(Player player, NPC target, int damage, float knockBack, bool crit)
-		{
-			if (player.altFunctionUse == 2) { }
-		}
-	}
+    public class GoldDagger : NinjaItem
+    {
+        public string Projectile = "GoldDaggerProjectile";           // the main projectile
+        public string MegaProjectile = "GoldDaggerProjectileMega";   // the MEGA projectile
+        public override void SetDefaults()
+        {
+            item.shootSpeed = 11.4f;// speed of the projectile
+            item.damage = 14;// damage of the weapon
+            item.knockBack = 3f;// knockback of the weapon
+            item.useStyle = ItemUseStyleID.SwingThrow;// the way the player animates
+            item.useAnimation = 25;// the time of the throw animation
+            item.useTime = 25;// the time between throws
+            item.width = 30;// the size of the hitbox
+            item.height = 30;// the size of the hitbox
+            item.rare = ItemRarityID.White;// the amount you can stack of the item
+            item.maxStack = 1;// the amount you can stack of the item
+            item.UseSound = SoundID.Item1;              // the sound that plays when used
+            item.value = Item.sellPrice(silver: 5);    // the price of the item
+            item.consumable = false;
+            item.noUseGraphic = true;
+            item.noMelee = true;
+            item.autoReuse = true;
+            item.shoot = mod.ProjectileType(Projectile);
+        }
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(ItemID.GoldBar, 8);
+            recipe.AddTile(TileID.Anvils);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
+        }
+        /* DO NOT MESS WITH STUFF PAST THIS POINT
+		UNLESS YOU'R DOIN SOMETHING UNIQUE*/
+        public override bool CanUseItem(Player player)
+        {
+            if (player.HasBuff(mod.BuffType("MegaAttack")))
+            {
+                item.shoot = mod.ProjectileType(MegaProjectile);
+                player.AddBuff(BuffType<Buffs.CMegaAttack>(), 1);
+            }
+            else
+            {
+                item.shoot = mod.ProjectileType(Projectile);
+            }
+            return base.CanUseItem(player);
+        }
+    }
 }
+
+
+
+
