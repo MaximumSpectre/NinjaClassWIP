@@ -35,17 +35,26 @@ namespace NinjaClass.Items.Weapons.Kunai
 			item.autoReuse = true;
 			item.shoot = mod.ProjectileType(Projectilee);
 		}
-		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
 		{
-			float numberProjectiles = 3 + Main.rand.Next(2); // 3, 4, or 5 shots
-			float rotation = MathHelper.ToRadians(12);
-			//position += Vector2.Normalize(new Vector2(speedX, speedY)) * 45f;
-			for (int i = 0; i < numberProjectiles; i++)
-			{
-				Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedBy(MathHelper.Lerp(-rotation, rotation, i / (numberProjectiles - 1))); // Watch out for dividing by 0 if there is only 1 projectile.
-				Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockBack, player.whoAmI);
-			}
-			return false;
+          	  ModRecipe recipe = new ModRecipe(mod);
+         	  recipe.AddIngredient(ItemID.Cactus, 8);
+        	  recipe.AddIngredient(ItemID.Rope, 1);
+          	  recipe.AddTile(TileID.WorkBenches);
+          	  recipe.SetResult(this);
+          	  recipe.AddRecipe();
+       		 }
+		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
+        {
+            int numberProjectiles = 3 + Main.rand.Next(2); // 3 or 4 shots
+            for (int i = 0; i < numberProjectiles; i++)
+            {
+                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(20)); // 20 degree spread.
+                // If you want to randomize the speed to stagger the projectiles
+                float scale = 1f - (Main.rand.NextFloat() * .15f); //projectileStagger
+                perturbedSpeed = perturbedSpeed * scale;
+                Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockBack, player.whoAmI);
+            }
+            return false;
 		}
 		/* DO NOT MESS WITH STUFF PAST THIS POINT
 		UNLESS YOU'R DOIN SOMETHING UNIQUE*/
