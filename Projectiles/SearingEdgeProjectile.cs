@@ -11,7 +11,7 @@ namespace NinjaClass.Projectiles
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Javelin");
+			DisplayName.SetDefault("Dagger");
 		}
 
 		public override void SetDefaults()
@@ -214,8 +214,8 @@ namespace NinjaClass.Projectiles
 		{
 			TargetWhoAmI++;
 			deathCount++;
-            if (deathCount >= 36)
-            {
+			if (deathCount >= 36)
+			{
 				projectile.Kill();
 			}
 			// For a little while, the javelin will travel with the same speed, but after this, the javelin drops velocity very quickly.

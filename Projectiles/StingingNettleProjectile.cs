@@ -95,37 +95,65 @@ namespace NinjaClass.Projectiles
 			Vector2 center;
 			float angle;
 			Vector2 tar;
-			/*if (Main.rand.Next(2) == 0)
+			if (projectile.damage < 1)
 			{
-				if (hasSpawned == false)
+				if (Main.rand.Next(2) == 0)
 				{
-					hasSpawned = true;
-					for (int i = 0; i < (Main.rand.Next(2) + 1); i++)
+					if (hasSpawned == false)
 					{
-						// Where dagger appears
+						hasSpawned = true;
+						for (int i = 0; i < (Main.rand.Next(2) + 1); i++)
+						{
+							// Where dagger appears
 
 
-						angle = Main.rand.Next(360) * 0.0174f;
-						//center.X += (float)System.Math.Sin(angle) * 200;
-						//center.Y += (float)System.Math.Cos(angle) * 200;
+							angle = Main.rand.Next(360) * 0.0174f;
+							//center.X += (float)System.Math.Sin(angle) * 200;
+							//center.Y += (float)System.Math.Cos(angle) * 200;
 
-						center.X = projectile.position.X;
-						center.Y = projectile.position.Y;
+							center.X = projectile.position.X;
+							center.Y = projectile.position.Y;
 
-						tar.X = projectile.position.X;
-						tar.Y = projectile.position.Y;
+							tar.X = projectile.position.X;
+							tar.Y = projectile.position.Y;
 
-						tar.Normalize();
-						tar.X += (float)System.Math.Sin(angle) * 200;
-						tar.Y += (float)System.Math.Cos(angle) * 200;
-						tar.Normalize();
-						tar *= 3; // speed
-								  //tar.X -= (tar.X / 2) * 2  ;
-								  //Projectile.NewProjectile(center.X, center.Y, tar.X, tar.Y, mod.ProjectileType("FrostShankProjectile"), (int)(damage * 0.50f), knockback, projectile.owner, 0f, 0f);
-						Projectile.NewProjectile(center.X, center.Y, tar.X, tar.Y, ProjectileID.Bee, (int)(initialDamage * 0.80f), projectile.knockBack, projectile.owner, 0f, 0f);
-					}  // last 0f,0f, this is projectile.ai[0] and projectile.ai[1] where you can put timer, angle, or the target.a
+							tar.Normalize();
+							tar.X += (float)System.Math.Sin(angle) * 200;
+							tar.Y += (float)System.Math.Cos(angle) * 200;
+							tar.Normalize();
+							tar *= 3; // speed
+									  //tar.X -= (tar.X / 2) * 2  ;
+									  //Projectile.NewProjectile(center.X, center.Y, tar.X, tar.Y, mod.ProjectileType("FrostShankProjectile"), (int)(damage * 0.50f), knockback, projectile.owner, 0f, 0f);
+							if (Main.player[projectile.owner].strongBees == true)
+							{
+								if (Main.rand.NextBool(4))
+								{
+									int hesinthebuilding = Projectile.NewProjectile(center.X, center.Y, tar.X, tar.Y, ProjectileID.GiantBee, (int)(initialDamage * 0.80f), (projectile.knockBack + 0.4f), projectile.owner, 0f, 0f);
+									Main.projectile[hesinthebuilding].thrown = true;
+									Main.projectile[hesinthebuilding].usesLocalNPCImmunity = true;
+									Main.projectile[hesinthebuilding].localNPCHitCooldown = 10;
+								}
+								else
+								{
+									int oprahbeesdotgif2 = Projectile.NewProjectile(center.X, center.Y, tar.X, tar.Y, ProjectileID.Bee, (int)(initialDamage * 0.60f), projectile.knockBack, projectile.owner, 0f, 0f);
+									Main.projectile[oprahbeesdotgif2].thrown = true;
+									Main.projectile[oprahbeesdotgif2].usesLocalNPCImmunity = true;
+									Main.projectile[oprahbeesdotgif2].localNPCHitCooldown = 10;
+								}
+							}
+							else
+							{
+								int oprahbeesdotgif = Projectile.NewProjectile(center.X, center.Y, tar.X, tar.Y, ProjectileID.Bee, (int)(initialDamage * 0.60f), projectile.knockBack, projectile.owner, 0f, 0f);
+								Main.projectile[oprahbeesdotgif].thrown = true;
+								Main.projectile[oprahbeesdotgif].usesLocalNPCImmunity = true;
+								Main.projectile[oprahbeesdotgif].localNPCHitCooldown = 10;
+							}
+
+						}  // last 0f,0f, this is projectile.ai[0] and projectile.ai[1] where you can put timer, angle, or the target.a
+					}
 				}
-			}*/
+			}
+
 			// Spawn some dusts upon javelin death
 			for (int i = 0; i < NUM_DUSTS; i++)
 			{
@@ -173,24 +201,8 @@ namespace NinjaClass.Projectiles
 			projectile.netUpdate = true; // netUpdate this javelin
 
 			target.AddBuff(20, 120);
-			if (projectile.damage >= 1)
-			{
-				if (Main.player[projectile.owner].strongBees == true && Main.rand.NextBool(3))
-				{
-					int hesinthebuilding = Projectile.NewProjectile(projectile.position.X, projectile.position.Y, projectile.velocity.X, projectile.velocity.Y,
-							566, projectile.damage / 2, 4f, projectile.owner, 0.0f, 0.0f);
-					Main.projectile[hesinthebuilding].thrown = true;
-					Main.projectile[hesinthebuilding].usesLocalNPCImmunity = true;
-					Main.projectile[hesinthebuilding].localNPCHitCooldown = 10;
-				}
-				int oprahbeesdotgif = Projectile.NewProjectile(projectile.position.X, projectile.position.Y, projectile.velocity.X / 2, projectile.velocity.Y / 2,
-							   181, projectile.damage / 3, 2f, projectile.owner, 0.0f, 0.0f);
-				Main.projectile[oprahbeesdotgif].thrown = true;
-				Main.projectile[oprahbeesdotgif].usesLocalNPCImmunity = true;
-				Main.projectile[oprahbeesdotgif].localNPCHitCooldown = 10;
-				projectile.damage = 0; // Makes sure the sticking javelins do not deal damage anymore
-			}
-			//projectile.damage = 0; // Makes sure the sticking javelins do not deal damage anymore
+
+			projectile.damage = 0; // Makes sure the sticking javelins do not deal damage anymore
 
 			// It is recommended to split your code into separate methods to keep code clean and clear
 			UpdateStickyJavelins(target);

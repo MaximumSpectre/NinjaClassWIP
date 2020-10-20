@@ -107,6 +107,7 @@ namespace NinjaClass.Projectiles.PreMega
 		int firstframe = 0;
 		public override void AI()
 		{
+			Lighting.AddLight(projectile.Center, 0.25f, 0.41f, 0.96f);
 			if (firstframe == 0)
             {
 				projectile.velocity *= 1.2f;

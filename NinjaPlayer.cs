@@ -83,7 +83,9 @@ namespace NinjaClass
 			{
 				customDamage = true;
 				damage = 0;
-				
+				return false;
+
+
 			}
 			if (NinjaDodge)
             {
@@ -111,6 +113,7 @@ namespace NinjaClass
 					}
 
 				}
+				return false;
 			}
 			return base.PreHurt(pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
 		}
@@ -133,6 +136,7 @@ namespace NinjaClass
 						{
 							Dust dust = Dust.NewDustDirect(player.position, player.width, player.height, 31, 0f, 0f, 150, default(Color), 1.6f);
 							dust.velocity /= 1.6f;
+							//Projectile.NewProjectile(player.position.X, player.position.Y, 0, 0, mod.ProjectileType("Projectile"), 20, 5, Main.myPlayer, 0f, 0f);
 						}
 					}
 				}
