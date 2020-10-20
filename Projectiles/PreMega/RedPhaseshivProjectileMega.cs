@@ -74,7 +74,7 @@ namespace NinjaClass.Projectiles.PreMega
 		}
 		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Texture2D texture = mod.GetTexture("Projectiles/PreMega/PhaseshivProjectileMega_Glow");
+			Texture2D texture = mod.GetTexture("Projectiles/PreMega/RedPhaseshivProjectileMega_Glow");
 			spriteBatch.Draw
 			(
 				texture,
