@@ -27,14 +27,15 @@ namespace NinjaClass.Items.Weapons.Kunai
 			item.height = 30;// the size of the hitbox
 			item.rare = ItemRarityID.White;// the amount you can stack of the item
 			item.maxStack = 1;// the amount you can stack of the item
-			item.UseSound = SoundID.Item1;              // the sound that plays when used
-			item.value = Item.sellPrice(silver: 5);    // the price of the item
+			item.UseSound = SoundID.Item1;              
+			item.value = Item.sellPrice(silver: 5);    
 			item.consumable = false;
 			item.noUseGraphic = true;
 			item.noMelee = true;
 			item.autoReuse = true;
 			item.shoot = mod.ProjectileType(Projectilee);
 		}
+        public override void AddRecipes()
 		{
           	  ModRecipe recipe = new ModRecipe(mod);
          	  recipe.AddIngredient(ItemID.Cactus, 8);
