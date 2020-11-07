@@ -28,6 +28,9 @@ namespace NinjaClass
 		public bool NinjaEvaded;
 		public int NinjaCount;
 		public bool NinjaItemWorn;
+		public bool NinjaWeakened;
+
+		public bool DesertArmor;
 
 		public override void ResetEffects()
 		{
@@ -37,6 +40,8 @@ namespace NinjaClass
 			NinjaDodge = false;
 			NinjaEvaded = false;
 			NinjaItemWorn = false;
+			DesertArmor = false;
+			NinjaWeakened = false;
 		}
 
 
@@ -49,6 +54,8 @@ namespace NinjaClass
 			NinjaEvaded = false;
 			NinjaItemWorn = false;
 			NinjaCount = 0;
+			DesertArmor = false;
+			NinjaWeakened = false;
 		}
 
 		public override void UpdateBadLifeRegen()
@@ -79,6 +86,7 @@ namespace NinjaClass
 
 		public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
 		{
+			//player.statDefense /= 2;
 			if (NinjaEvaded)
 			{
 				customDamage = true;
@@ -88,9 +96,9 @@ namespace NinjaClass
 
 			}
 			if (NinjaDodge)
-            {
+			{
 				player.AddBuff(BuffType<Buffs.NinjaEvaded>(), 30);
-				
+
 				damage = 0;
 				customDamage = true;
 				if (NinjaCount > 5)
@@ -98,18 +106,14 @@ namespace NinjaClass
 					NinjaCount = 0;
 					if (player.HasBuff(mod.BuffType("NinjaExpertise")))
 					{
-						player.AddBuff(BuffType<Buffs.NinjaMastery>(), 1800);
+						player.AddBuff(BuffType<Buffs.HiddenTechnique>(), 600);
 					}
-					else if (player.HasBuff(mod.BuffType("NinjaMastery")))
-					{
-						player.AddBuff(BuffType<Buffs.MegaAttack>(), 600);
-					}
-					else if (player.HasBuff(mod.BuffType("MegaAttack")))
+					else if (player.HasBuff(mod.BuffType("HiddenTechnique")))
 					{
 					}
 					else
 					{
-						player.AddBuff(BuffType<Buffs.NinjaExpertise>(), 2400);
+						player.AddBuff(BuffType<Buffs.NinjaExpertise>(), 1200);
 					}
 
 				}
@@ -125,26 +129,69 @@ namespace NinjaClass
             {
 				if (NinjaClass.NinjaEvasion.JustPressed)
 				{
-					if (player.HasBuff(mod.BuffType("NinjaExausted")))
+					if (player.HasBuff(mod.BuffType("NinjaExhausted")))
 					{
 					}
 					else
 					{
 						player.AddBuff(BuffType<Buffs.NinjaDodge>(), 15);
-						player.AddBuff(BuffType<Buffs.NinjaExausted>(), 600);
+						player.AddBuff(BuffType<Buffs.NinjaExhausted>(), 480);
+						player.AddBuff(BuffType<Buffs.Weakened>(), 300);
 						for (int d = 0; d < 70; d++)
 						{
 							Dust dust = Dust.NewDustDirect(player.position, player.width, player.height, 31, 0f, 0f, 150, default(Color), 1.6f);
 							dust.velocity /= 1.6f;
 							//Projectile.NewProjectile(player.position.X, player.position.Y, 0, 0, mod.ProjectileType("Projectile"), 20, 5, Main.myPlayer, 0f, 0f);
 						}
+						if (DesertArmor)
+						{
+							if (Main.rand.Next(3) < 2)
+							{
+								player.AddBuff(BuffType<Buffs.DesertWinds>(), 900);
+							}
+							
+						}
 					}
+
 				}
 			}
 		}
 		public override void PostUpdate()
         {
 			NinjaCount++;
-        }
+			if (NinjaWeakened)
+			{
+				player.statDefense = (int)(player.statDefense*0.85f);
+			}
+
+			if (NinjaItemWorn)
+			{
+				if (player.HasBuff(mod.BuffType("NinjaExhausted")))
+				{
+					UI.EvasionUI.visible = false;
+				}
+				else
+				{
+					UI.EvasionUI.visible = true;
+				}
+			}
+			else
+			{
+				UI.EvasionUI.visible = false;
+			}
+
+		}
+
+		public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
+		{
+			if (player.HasBuff(mod.BuffType("NinjaEvaded")))
+			{
+				return false;
+			}
+			return true;
+		}
+		public override void PreUpdate()
+		{
+		}
 	}
 }

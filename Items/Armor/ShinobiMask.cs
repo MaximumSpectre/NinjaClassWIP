@@ -35,6 +35,7 @@ namespace NinjaClass.Items.Armor
 			player.dash = 2;
 			player.eocDash = 100;
 			NinjaDamagePlayer.ModPlayer(player).NinjaCrit += 6;
+			player.GetModPlayer<NinjaPlayer>().NinjaItemWorn = true;
 			/* Here are the individual weapon class bonuses.
 			player.meleeDamage -= 0.2f;
 			player.thrownDamage -= 0.2f;

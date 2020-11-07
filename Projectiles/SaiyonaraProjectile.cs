@@ -16,8 +16,8 @@ namespace NinjaClass.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.width = 22;
-			projectile.height = 22;
+			projectile.width = 34;
+			projectile.height = 34;
 			projectile.friendly = true;
 			projectile.thrown = true;
 			projectile.penetrate = -1;
@@ -86,7 +86,7 @@ namespace NinjaClass.Projectiles
 			for (int i = 0; i < NUM_DUSTS; i++)
 			{
 				// Create a new dust
-				Dust dust = Dust.NewDustDirect(usePos, projectile.width, projectile.height, 81);
+				Dust dust = Dust.NewDustDirect(usePos, projectile.width, projectile.height, 224);
 				dust.position = (dust.position + projectile.Center) / 2f;
 				dust.velocity += rotVector * 2f;
 				dust.velocity *= 0.5f;
@@ -126,7 +126,30 @@ namespace NinjaClass.Projectiles
 		}
 		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
-			
+			if (enemyHit == 0)
+			{
+				Vector2 center;
+				Vector2 tar;
+				//center.X += (float)System.Math.Sin(angle) * 200;
+				//center.Y += (float)System.Math.Cos(angle) * 200;
+
+				center.X = projectile.position.X ;
+				center.Y = projectile.position.Y + 10;
+
+				tar = new Vector2(projectile.velocity.X, projectile.velocity.Y).RotatedBy(MathHelper.ToRadians(20 + Main.rand.Next(6))); ;
+				tar *= 0.6f;
+				if (Main.rand.NextBool(2))
+				{
+					Projectile.NewProjectile(center.X, center.Y, tar.X, tar.Y, mod.ProjectileType("SaiyonaraProjectile2"), (int)(projectile.damage * 0.33f), projectile.knockBack, projectile.owner, 0f, 0f);
+				}
+				
+				tar = new Vector2(projectile.velocity.X, projectile.velocity.Y).RotatedBy(MathHelper.ToRadians(-20 - Main.rand.Next(6))); ;
+				tar *= 0.6f;
+				if (Main.rand.NextBool(2))
+				{
+					Projectile.NewProjectile(center.X, center.Y, tar.X, tar.Y, mod.ProjectileType("SaiyonaraProjectile2"), (int)(projectile.damage * 0.33f), projectile.knockBack, projectile.owner, 0f, 0f);
+				}	
+			}
             if (enemyHit >= 1)
             {
 				IsStickingToTarget = true; // we are sticking to a target
@@ -188,7 +211,7 @@ namespace NinjaClass.Projectiles
 
 		// Added these 2 constant to showcase how you could make AI code cleaner by doing this
 		// Change this number if you want to alter how long the javelin can travel at a constant speed
-		private const int MAX_TICKS = 4;
+		private const int MAX_TICKS = 5;
 
 		// Change this number if you want to alter how the alpha changes
 		private const int ALPHA_REDUCTION = 25;
@@ -220,9 +243,22 @@ namespace NinjaClass.Projectiles
 
 		private void NormalAI()
 		{
+			Vector2 usePos = projectile.position; // Position to use for dusts
+			Vector2 rotVector = (projectile.rotation - MathHelper.ToRadians(90f)).ToRotationVector2(); // rotation vector to use for dust velocity
+			usePos += rotVector * 16f;
+			for (int i = 0; i < 3; i++)
+			{
+				// Create a new dust
+				Dust dust = Dust.NewDustDirect(usePos, projectile.width, projectile.height, 29);
+				dust.position = (dust.position + projectile.Center) / 2f;
+				dust.velocity += rotVector * 2f;
+				dust.velocity *= 0.8f;
+				dust.noGravity = true;
+				usePos -= rotVector * 8f;
+			}
 			TargetWhoAmI++;
 			deathCount++;
-            if (deathCount >= 40)
+            if (deathCount >= 48)
             {
 				projectile.Kill();
 			}
@@ -231,10 +267,10 @@ namespace NinjaClass.Projectiles
 			{
 				// Change these multiplication factors to alter the javelin's movement change after reaching maxTicks
 				const float velXmult = 0.99f; // x velocity factor, every AI update the x velocity will be 98% of the original speed
-				const float velYmult = 0.06f; // y velocity factor, every AI update the y velocity will be be 0.35f bigger of the original speed, causing the javelin to drop to the ground
+				const float velYmult = 0.18f; // y velocity factor, every AI update the y velocity will be be 0.35f bigger of the original speed, causing the javelin to drop to the ground
 				TargetWhoAmI = MAX_TICKS; // set ai1 to maxTicks continuously
 				projectile.velocity.X *= velXmult;
-				projectile.velocity.Y += velYmult;
+				projectile.velocity.Y += velYmult*0.6f;
 			}
 
 			// Make sure to set the rotation accordingly to the velocity, and add some to work around the sprite's rotation

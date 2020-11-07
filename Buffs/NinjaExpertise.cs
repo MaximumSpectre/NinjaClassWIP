@@ -25,6 +25,11 @@ namespace NinjaClass.Buffs
 				player.DelBuff(buffIndex);
 				buffIndex--;
 			}
+			else if (player.HasBuff(mod.BuffType("HiddenTechnique")))
+			{
+				player.DelBuff(buffIndex);
+				buffIndex--;
+			}
 		}
 	}
 }

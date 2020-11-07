@@ -23,8 +23,8 @@ namespace NinjaClass.Items.Weapons
 			item.useStyle = ItemUseStyleID.SwingThrow;// the way the player animates
 			item.useAnimation = 30;// the time of the throw animation
 			item.useTime = 30;// the time between throws
-			item.width = 30;// the size of the hitbox
-			item.height = 30;// the size of the hitbox
+			item.width = 26;// the size of the hitbox
+			item.height = 26;// the size of the hitbox
 			item.rare = ItemRarityID.White;// the amount you can stack of the item
 			item.maxStack = 1;// the amount you can stack of the item
 			item.UseSound = SoundID.Item1;              // the sound that plays when used
@@ -35,14 +35,15 @@ namespace NinjaClass.Items.Weapons
 			item.autoReuse = true;
 			item.shoot = mod.ProjectileType(Projectile);
 		}
+
 		/* DO NOT MESS WITH STUFF PAST THIS POINT
 		UNLESS YOU'R DOIN SOMETHING UNIQUE*/
 		public override bool CanUseItem(Player player)
 		{
-			if (player.HasBuff(mod.BuffType("MegaAttack")))
+			if (player.HasBuff(mod.BuffType("HiddenTechnique")))
 			{
 				item.shoot = mod.ProjectileType(MegaProjectile);
-				player.AddBuff(BuffType<Buffs.CMegaAttack>(), 1);
+				player.AddBuff(BuffType<Buffs.CHiddenTechnique>(), 1);
 			}
 			else
 			{

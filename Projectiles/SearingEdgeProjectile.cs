@@ -20,7 +20,7 @@ namespace NinjaClass.Projectiles
 			projectile.height = 20;
 			projectile.friendly = true;
 			projectile.thrown = true;
-			projectile.penetrate = 3;
+			projectile.penetrate = 1;
 			projectile.hide = true;
 		}
 
@@ -41,7 +41,6 @@ namespace NinjaClass.Projectiles
 					{
 						drawCacheProjsBehindNPCs.Add(index);
 					}
-
 					return;
 				}
 			}
@@ -69,6 +68,11 @@ namespace NinjaClass.Projectiles
 
 		public override void Kill(int timeLeft)
 		{
+			if (projectile.owner == Main.myPlayer)
+			{
+				int ekuslosion = Projectile.NewProjectile(projectile.position.X, projectile.position.Y, 0, 0, mod.ProjectileType("SearingEdgeProjectile2"), projectile.damage, 0, Main.myPlayer, 0f, 0f);
+			}
+			
 			Main.PlaySound(0, (int)projectile.position.X, (int)projectile.position.Y); // Play a death sound
 			Vector2 usePos = projectile.position; // Position to use for dusts
 
@@ -129,7 +133,7 @@ namespace NinjaClass.Projectiles
 			projectile.netUpdate = true; // netUpdate this javelin
 			target.AddBuff(BuffID.OnFire, 180);
 
-			projectile.damage = 0; // Makes sure the sticking javelins do not deal damage anymore
+			//projectile.damage = 0; // Makes sure the sticking javelins do not deal damage anymore
 
 			// It is recommended to split your code into separate methods to keep code clean and clear
 			UpdateStickyJavelins(target);
@@ -214,7 +218,7 @@ namespace NinjaClass.Projectiles
 		{
 			TargetWhoAmI++;
 			deathCount++;
-			if (deathCount >= 36)
+			if (deathCount >= 44)
 			{
 				projectile.Kill();
 			}
@@ -222,11 +226,11 @@ namespace NinjaClass.Projectiles
 			if (TargetWhoAmI >= MAX_TICKS)
 			{
 				// Change these multiplication factors to alter the javelin's movement change after reaching maxTicks
-				const float velXmult = 0.98f; // x velocity factor, every AI update the x velocity will be 98% of the original speed
+				const float velXmult = 0.99f; // x velocity factor, every AI update the x velocity will be 98% of the original speed
 				const float velYmult = 0.14f; // y velocity factor, every AI update the y velocity will be be 0.35f bigger of the original speed, causing the javelin to drop to the ground
 				TargetWhoAmI = MAX_TICKS; // set ai1 to maxTicks continuously
 				projectile.velocity.X *= velXmult;
-				projectile.velocity.Y += velYmult;
+				projectile.velocity.Y += velYmult / 1.4f;
 			}
 
 			// Make sure to set the rotation accordingly to the velocity, and add some to work around the sprite's rotation

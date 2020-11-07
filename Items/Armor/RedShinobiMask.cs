@@ -38,6 +38,7 @@ namespace NinjaClass.Items.Armor
 			player.noFallDmg = true;
 			player.maxRunSpeed += 1.2f;
 			NinjaDamagePlayer.ModPlayer(player).NinjaDamageAdd += 0.07f;
+			player.GetModPlayer<NinjaPlayer>().NinjaItemWorn = true;
 			/* Here are the individual weapon class bonuses.
 			player.meleeDamage -= 0.2f;
 			player.thrownDamage -= 0.2f;

@@ -7,11 +7,11 @@ namespace NinjaClass.Buffs
 {
 	// Ethereal Flames is an example of a buff that causes constant loss of life.
 	// See ExamplePlayer.UpdateBadLifeRegen and ExampleGlobalNPC.UpdateLifeRegen for more information.
-	public class MegaAttack : ModBuff
+	public class HiddenTechnique : ModBuff
 	{
 		public override void SetDefaults() {
-			DisplayName.SetDefault("Mega Attack");
-			Description.SetDefault("Your next attack will be a MEGA attack");
+			DisplayName.SetDefault("Hidden Technique");
+			Description.SetDefault("Your next attack will be a Hidden Technique");
 			Main.debuff[Type] = true;
 			Main.pvpBuff[Type] = true;
 			Main.buffNoSave[Type] = true;
@@ -19,7 +19,7 @@ namespace NinjaClass.Buffs
 		}
 
 		public override void Update(Player player, ref int buffIndex) {
-			if (player.HasBuff(mod.BuffType("CMegaAttack")))
+			if (player.HasBuff(mod.BuffType("CHiddenTechnique")))
 			{
 				player.DelBuff(buffIndex);
 				buffIndex--;

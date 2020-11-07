@@ -21,7 +21,7 @@ namespace NinjaClass.Buffs
 		public override void Update(Player player, ref int buffIndex) {
 			NinjaDamagePlayer.ModPlayer(player).NinjaDamageMult += 0.2f;
 			
-			if (player.HasBuff(mod.BuffType("MegaAttack")))
+			if (player.HasBuff(mod.BuffType("HiddenTechnique")))
 			{
 				player.DelBuff(buffIndex);
 				buffIndex--;

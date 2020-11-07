@@ -17,8 +17,8 @@ namespace NinjaClass.Items.Weapons.Kunai
 		public string MegaProjectile = "CactusSpineProjectileMega";   // the MEGA projectile
 		public override void SetDefaults()
 		{
-			item.shootSpeed = 8f;// speed of the projectile
-			item.damage = 2;// damage of the weapon
+			item.shootSpeed = 9f;// speed of the projectile
+			item.damage = 4;// damage of the weapon
 			item.knockBack = 1.1f;// knockback of the weapon
 			item.useStyle = ItemUseStyleID.SwingThrow;// the way the player animates
 			item.useAnimation = 30;// the time of the throw animation
@@ -27,44 +27,45 @@ namespace NinjaClass.Items.Weapons.Kunai
 			item.height = 30;// the size of the hitbox
 			item.rare = ItemRarityID.White;// the amount you can stack of the item
 			item.maxStack = 1;// the amount you can stack of the item
-			item.UseSound = SoundID.Item1;              
-			item.value = Item.sellPrice(silver: 5);    
+			item.UseSound = SoundID.Item1;              // the sound that plays when used
+			item.value = Item.sellPrice(silver: 5);    // the price of the item
 			item.consumable = false;
 			item.noUseGraphic = true;
 			item.noMelee = true;
 			item.autoReuse = true;
+			item.crit = 4;
 			item.shoot = mod.ProjectileType(Projectilee);
 		}
-        public override void AddRecipes()
+		public override void AddRecipes()
 		{
           	  ModRecipe recipe = new ModRecipe(mod);
-         	  recipe.AddIngredient(ItemID.Cactus, 8);
-        	  recipe.AddIngredient(ItemID.Rope, 1);
+         	  recipe.AddIngredient(ItemID.Cactus, 12);
           	  recipe.AddTile(TileID.WorkBenches);
           	  recipe.SetResult(this);
           	  recipe.AddRecipe();
-       		 }
+       	}
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {
             int numberProjectiles = 3 + Main.rand.Next(2); // 3 or 4 shots
             for (int i = 0; i < numberProjectiles; i++)
             {
-                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(20)); // 20 degree spread.
+                Vector2 perturbedSpeed = new Vector2(speedX, speedY).RotatedByRandom(MathHelper.ToRadians(17)); // 20 degree spread.
                 // If you want to randomize the speed to stagger the projectiles
                 float scale = 1f - (Main.rand.NextFloat() * .15f); //projectileStagger
                 perturbedSpeed = perturbedSpeed * scale;
                 Projectile.NewProjectile(position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockBack, player.whoAmI);
             }
-            return false;
+			return false;
 		}
+		public float charge = 0;
 		/* DO NOT MESS WITH STUFF PAST THIS POINT
 		UNLESS YOU'R DOIN SOMETHING UNIQUE*/
 		public override bool CanUseItem(Player player)
 		{
-			if (player.HasBuff(mod.BuffType("MegaAttack")))
+			if (player.HasBuff(mod.BuffType("HiddenTechnique")))
 			{
 				item.shoot = mod.ProjectileType(MegaProjectile);
-				player.AddBuff(BuffType<Buffs.CMegaAttack>(), 1);
+				player.AddBuff(BuffType<Buffs.CHiddenTechnique>(), 1);
 			}
 			else
 			{

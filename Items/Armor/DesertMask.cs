@@ -30,16 +30,9 @@ namespace NinjaClass.Items.Armor
 
 		public override void UpdateArmorSet(Player player)
 		{
-			player.setBonus = "desert double jump";
-			player.doubleJumpSandstorm = true;
+			player.setBonus = "Chance for desert winds to assist you when evading";
 			player.GetModPlayer<NinjaPlayer>().NinjaItemWorn = true;
-			/* Here are the individual weapon class bonuses.
-			player.meleeDamage -= 0.2f;
-			player.thrownDamage -= 0.2f;
-			player.rangedDamage -= 0.2f;
-			player.magicDamage -= 0.2f;
-			player.minionDamage -= 0.2f;
-			*/
+			player.GetModPlayer<NinjaPlayer>().DesertArmor = true;
 		}
 
 		public override void DrawHair(ref bool drawHair, ref bool drawAltHair)

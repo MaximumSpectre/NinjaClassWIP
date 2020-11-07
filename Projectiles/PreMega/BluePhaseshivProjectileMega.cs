@@ -23,8 +23,8 @@ namespace NinjaClass.Projectiles.PreMega
 		}
 		public override void SetDefaults()
 		{
-			projectile.width = 50;
-			projectile.height = 50;
+			projectile.width = 68;
+			projectile.height = 68;
 			projectile.friendly = true;
 			projectile.thrown = true;
 			projectile.penetrate = penetration;

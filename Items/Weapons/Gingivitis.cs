@@ -39,10 +39,10 @@ namespace NinjaClass.Items.Weapons
 		UNLESS YOU'R DOIN SOMETHING UNIQUE*/
         public override bool CanUseItem(Player player)
         {
-            if (player.HasBuff(mod.BuffType("MegaAttack")))
+            if (player.HasBuff(mod.BuffType("HiddenTechnique")))
             {
                 item.shoot = mod.ProjectileType(MegaProjectile);
-                player.AddBuff(BuffType<Buffs.CMegaAttack>(), 1);
+                player.AddBuff(BuffType<Buffs.CHiddenTechnique>(), 1);
             }
             else
             {

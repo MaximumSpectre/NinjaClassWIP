@@ -7,7 +7,7 @@ namespace NinjaClass.Buffs
 {
 	// Ethereal Flames is an example of a buff that causes constant loss of life.
 	// See ExamplePlayer.UpdateBadLifeRegen and ExampleGlobalNPC.UpdateLifeRegen for more information.
-	public class CMegaAttack : ModBuff
+	public class CHiddenTechnique : ModBuff
 	{
 		public override void SetDefaults() {
 			DisplayName.SetDefault("You shouldnt be seing this");

@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using System;
 using static Terraria.ModLoader.ModContent;
 using NinjaClass.Items.Weapons.Phaseshivs;
+using Mono.Collections.Generic;
 
 namespace NinjaClass.Items
 {
@@ -23,7 +24,6 @@ namespace NinjaClass.Items
             item.summon = false;
             
         }
-
         public override int ChoosePrefix(Terraria.Utilities.UnifiedRandom rand)
         {
 
@@ -87,7 +87,10 @@ namespace NinjaClass.Items
                 // Change the tooltip text
                 tt.text = damageValue + " ninja " + damageWord;
             }
+            TooltipLine line = new TooltipLine(mod, "NinjaGear", "-Ninja Class-");
+            line.overrideColor = new Color(120, 0, Math.Min(Math.Min(Main.DiscoR + Main.DiscoG, Main.DiscoB + Main.DiscoG), Main.DiscoB + Main.DiscoR)-30);
+            //Math.Min(Math.Max((Main.DiscoB + Main.DiscoR + Main.DiscoG)/3, mini), maxi)
+            tooltips.Insert(1, line);
         }
-
     }
 }

@@ -1,55 +1,40 @@
-using NinjaClass.Projectiles;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
+using Terraria.Utilities;
 using Terraria.ModLoader;
+using System;
 using static Terraria.ModLoader.ModContent;
+using NinjaClass.Projectiles.PreMega;
 
 namespace NinjaClass.Items.Weapons
 {
-	// This class handles everything for our custom damage class
-	// Any class that we wish to be using our custom damage class will derive from this class, instead of ModItem
 	public class SearingEdge : NinjaItem
 	{
-		// Custom items should override this to set their defaults
-		public virtual void SafeSetDefaults()
+		public string Projectile = "SearingEdgeProjectile";           // the main projectile
+		public string MegaProjectile = "SearingEdgeProjectileMega";   // the MEGA projectile
+		public override void SetDefaults()
 		{
-			item.shootSpeed = 12.2f;
-			item.damage = 33;
-			item.knockBack = 4.6f;
-			item.useStyle = 1;
-			item.useAnimation = 34;
-			item.useTime = 34;
-			item.width = 39;
-			item.height = 39;
-			item.maxStack = 1;
-			item.rare = 2;
-
+			item.shootSpeed = 12.8f;// speed of the projectile
+			item.damage = 33;// damage of the weapon
+			item.knockBack = 4.6f;// knockback of the weapon
+			item.useStyle = ItemUseStyleID.SwingThrow;// the way the player animates
+			item.useAnimation = 36;// the time of the throw animation
+			item.useTime = 36;// the time between throws
+			item.width = 38;// the size of the hitbox
+			item.height = 38;// the size of the hitbox
+			item.rare = 2;// the amount you can stack of the item
+			item.maxStack = 1;// the amount you can stack of the item
+			item.UseSound = SoundID.Item1;              // the sound that plays when used
+			item.value = Item.sellPrice(silver: 65);    // the price of the item
 			item.consumable = false;
 			item.noUseGraphic = true;
 			item.noMelee = true;
 			item.autoReuse = true;
-			item.thrown = true;
-
-			item.UseSound = SoundID.Item1;
-			item.value = Item.sellPrice(silver: 54);
-			// Look at the javelin projectile for a lot of custom code
-			// If you are in an editor like Visual Studio, you can hold CTRL and Click ExampleJavelinProjectile
-			item.shoot = ProjectileType<SearingEdgeProjectile>();
+			item.shoot = mod.ProjectileType(Projectile);
 		}
-
-		// By making the override sealed, we prevent derived classes from further overriding the method and enforcing the use of SafeSetDefaults()
-		// We do this to ensure that the vanilla damage types are always set to false, which makes the custom damage type work
-		public sealed override void SetDefaults()
-		{
-			SafeSetDefaults();
-			// all vanilla damage types must be false for custom damage types to work
-		}
-
-		// As a modder, you could also opt to make these overrides also sealed. Up to the modder
-
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
@@ -59,5 +44,21 @@ namespace NinjaClass.Items.Weapons
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}
+		/* DO NOT MESS WITH STUFF PAST THIS POINT
+		UNLESS YOU'R DOIN SOMETHING UNIQUE*/
+		public override bool CanUseItem(Player player)
+		{
+			if (player.HasBuff(mod.BuffType("HiddenTechnique")))
+			{
+				item.shoot = mod.ProjectileType(MegaProjectile);
+				player.AddBuff(BuffType<Buffs.CHiddenTechnique>(), 1);
+			}
+			else
+			{
+				item.shoot = mod.ProjectileType(Projectile);
+			}
+			return base.CanUseItem(player);
+		}
 	}
 }
+
