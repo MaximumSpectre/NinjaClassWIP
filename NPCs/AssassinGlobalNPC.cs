@@ -1,6 +1,6 @@
-
 using Microsoft.Xna.Framework;
 using NinjaClass.Buffs;
+using NinjaClass.Items.Accessories;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -34,6 +34,10 @@ namespace NinjaClass.NPCs
 					if (Main.rand.Next(3) == 0)
 						Item.NewItem(npc.getRect(), ModContent.ItemType<Items.Weapons.WoodenDagger>());
 				}
+			}
+            if (npc.type == NPCID.WallofFlesh && Main.rand.NextBool(7) && !Main.expertMode)
+			{
+				Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, ItemType<ShinobiEmblem>(), 1);
 			}
 
 			// Addtional if statements here if you would like to add drops to other vanilla npc.
