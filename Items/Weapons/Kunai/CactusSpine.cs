@@ -33,7 +33,6 @@ namespace NinjaClass.Items.Weapons.Kunai
 			item.noUseGraphic = true;
 			item.noMelee = true;
 			item.autoReuse = true;
-			item.crit = 4;
 			item.shoot = mod.ProjectileType(Projectilee);
 		}
 		public override void AddRecipes()

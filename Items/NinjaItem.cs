@@ -70,7 +70,7 @@ namespace NinjaClass.Items
 
         public override void GetWeaponCrit(Player player, ref int crit)
         {
-            crit = crit + NinjaDamagePlayer.ModPlayer(player).NinjaCrit;
+            crit = crit + NinjaDamagePlayer.ModPlayer(player).NinjaCrit + 4;
         }
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)

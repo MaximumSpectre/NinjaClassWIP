@@ -28,7 +28,7 @@ namespace NinjaClass.Items.Weapons
             item.rare = ItemRarityID.Blue;// the amount you can stack of the item
             item.maxStack = 1;// the amount you can stack of the item
             item.UseSound = SoundID.Item1;              // the sound that plays when used
-            item.value = Item.sellPrice(silver: 5);    // the price of the item
+            item.value = Item.sellPrice(silver: 27);    // the price of the item
             item.consumable = false;
             item.noUseGraphic = true;
             item.noMelee = true;
