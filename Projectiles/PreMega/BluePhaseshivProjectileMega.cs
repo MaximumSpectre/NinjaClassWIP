@@ -80,7 +80,7 @@ namespace NinjaClass.Projectiles.PreMega
 				texture,
 				projectile.position,
 				new Rectangle(0, 0, texture.Width, texture.Height),
-				Color.White,
+				Color.Blue,
 				projectile.rotation,
 				texture.Size() * 0.5f,
 				projectile.scale,
