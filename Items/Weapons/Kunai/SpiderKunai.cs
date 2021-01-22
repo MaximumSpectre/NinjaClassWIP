@@ -9,7 +9,7 @@ using System;
 using static Terraria.ModLoader.ModContent;
 using NinjaClass.Projectiles.HardMega;
 
-namespace NinjaClass.Items.Weapons.Hardmode.Kunai
+namespace NinjaClass.Items.Weapons.Kunai
 {
 	public class SpiderKunai : NinjaItem
 	{
@@ -40,7 +40,7 @@ namespace NinjaClass.Items.Weapons.Hardmode.Kunai
 		{
           	  ModRecipe recipe = new ModRecipe(mod);
          	  recipe.AddIngredient(2607, 12);
-          	  recipe.AddTile(TileID.WorkBenches);
+          	  recipe.AddTile(TileID.Anvils);
           	  recipe.SetResult(this);
           	  recipe.AddRecipe();
        	}

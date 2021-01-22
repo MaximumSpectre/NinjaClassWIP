@@ -5,7 +5,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace NinjaClass.Projectiles.Hardmode.Kunai
+namespace NinjaClass.Projectiles.Kunai
 {
 	public class SpiderKunaiProjectile : ModProjectile
 	{

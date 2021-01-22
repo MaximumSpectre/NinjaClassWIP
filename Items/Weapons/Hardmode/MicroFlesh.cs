@@ -35,11 +35,20 @@ namespace NinjaClass.Items.Weapons.Hardmode
 			item.thrown = true;
 
 			item.UseSound = SoundID.Item1;
-			item.value = Item.sellPrice(gold: 5);
+			item.value = Item.sellPrice(gold: 4);
 			// Look at the javelin projectile for a lot of custom code
 			// If you are in an editor like Visual Studio, you can hold CTRL and Click ExampleJavelinProjectile
 			item.shoot = ProjectileType<MicroFleshProjectile>();
 		}
+        public override void AddRecipes()
+        {
+            ModRecipe recipe = new ModRecipe(mod);
+            recipe.AddIngredient(mod.ItemType("FleshChewer"), 1);
+            recipe.AddIngredient(1332, 20);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.SetResult(this);
+            recipe.AddRecipe();
+        }
 
 		// By making the override sealed, we prevent derived classes from further overriding the method and enforcing the use of SafeSetDefaults()
 		// We do this to ensure that the vanilla damage types are always set to false, which makes the custom damage type work

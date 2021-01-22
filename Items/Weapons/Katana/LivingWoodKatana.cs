@@ -32,7 +32,7 @@ namespace NinjaClass.Items.Weapons.Katana
 			item.consumable = false;
 			item.noUseGraphic = true;
 			item.noMelee = true;
-			item.autoReuse = true;
+			item.channel = true;
 			item.shoot = mod.ProjectileType(Projectile);
 		}
 

@@ -17,11 +17,14 @@ namespace NinjaClass.Projectiles.Katana
 		}
 		public override void SetDefaults()
 		{
-			projectile.width = 60;
-			projectile.height = 60;
+			projectile.width = 100;
+			projectile.height = 100;
 			projectile.friendly = true;
-			projectile.penetrate = -1;
+			projectile.penetrate = 5;
 			projectile.tileCollide = false;
+            projectile.timeLeft = 300;
+            projectile.usesLocalNPCImmunity = true;
+			projectile.localNPCHitCooldown = 30;
 			//projectile.hide = true;
 			projectile.ownerHitCheck = true; //so you can't hit enemies through walls
 		}
@@ -38,7 +41,7 @@ namespace NinjaClass.Projectiles.Katana
 				}
 			}
 			//projectile.direction = (projectile.spriteDirection = ((projectile.velocity.X > 0f) ? 1 : -1));
-			//projectile.rotation = projectile.velocity.ToRotation();
+			projectile.rotation += 0.1f;
 			/*if (projectile.spriteDirection == -1)
 			{
 				projectile.rotation += MathHelper.Pi;
@@ -50,7 +53,7 @@ namespace NinjaClass.Projectiles.Katana
 			double deg = .01 * (double)projectile.ai[1]; //The degrees, you can multiply projectile.ai[1] to make it orbit faster, may be choppy depending on the value
 			double rad = deg * (Math.PI / 180); //Convert degrees to radians
 			rad = projectile.velocity.ToRotation();
-			double dist = 50; //Distance away from the player
+			double dist = 0; //Distance away from the player
 			//Making player variable "p" set as the projectile's owner
 			Player p = Main.player[projectile.owner];
 			projectile.ai[1] += 1f;

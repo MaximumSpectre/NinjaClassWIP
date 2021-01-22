@@ -1,28 +1,29 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
+using NinjaClass.Projectiles.PreMega;
 
-
-namespace NinjaClass.Projectiles.Hardmode
+namespace NinjaClass.Projectiles
 {
-	public class MicroFleshProjectile : ModProjectile
+	public class FleshChewerProjectile : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Flesh");
+			DisplayName.SetDefault("Chewer");
+            Main.projFrames[projectile.type] = 2;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
+			projectile.width = 32;
+			projectile.height = 24;
 			projectile.friendly = true;
 			projectile.thrown = true;
-			projectile.penetrate = 3;
+			projectile.penetrate = 10;
 			projectile.hide = true;
 			projectile.timeLeft = 3600;
 		}
@@ -60,11 +61,11 @@ namespace NinjaClass.Projectiles.Hardmode
 			// This code makes the projectile very bouncy.
 			if (projectile.velocity.X != oldVelocity.X && Math.Abs(oldVelocity.X) > 1f)
 			{
-				projectile.velocity.X = oldVelocity.X * -0.86f;
+				projectile.velocity.X = oldVelocity.X * -0.75f;
 			}
 			if (projectile.velocity.Y != oldVelocity.Y && Math.Abs(oldVelocity.Y) > 1f)
 			{
-				projectile.velocity.Y = oldVelocity.Y * -0.86f;
+				projectile.velocity.Y = oldVelocity.Y * -0.75f;
 			}
 			return false;
 		}
@@ -137,7 +138,7 @@ namespace NinjaClass.Projectiles.Hardmode
 			set => projectile.ai[1] = value;
 		}
 
-		private const int MAX_STICKY_JAVELINS = 3; // This is the max. amount of javelins being able to attach
+		private const int MAX_STICKY_JAVELINS = 10; // This is the max. amount of javelins being able to attach
 		private readonly Point[] _stickingJavelins = new Point[MAX_STICKY_JAVELINS]; // The point array holding for sticking javelins
 
 		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
@@ -171,7 +172,7 @@ namespace NinjaClass.Projectiles.Hardmode
 					&& currentProjectile.active // Make sure the projectile is active
 					&& currentProjectile.owner == Main.myPlayer // Make sure the projectile's owner is the client's player
 					&& currentProjectile.type == projectile.type // Make sure the projectile is of the same type as this javelin
-					&& currentProjectile.modProjectile is MicroFleshProjectile daggerProjectile // Use a pattern match cast so we can access the projectile like an ExampleJavelinProjectile
+					&& currentProjectile.modProjectile is FleshChewerProjectile daggerProjectile // Use a pattern match cast so we can access the projectile like an ExampleJavelinProjectile
 					&& daggerProjectile.IsStickingToTarget // the previous pattern match allows us to use our properties
 					&& daggerProjectile.TargetWhoAmI == target.whoAmI)
 				{
@@ -214,7 +215,14 @@ namespace NinjaClass.Projectiles.Hardmode
 			// Separating into different methods helps keeps your AI clean
 			if (IsStickingToTarget) StickyAI();
 			else NormalAI();
-
+            if (Main.player[projectile.owner].ownedProjectileCounts[ProjectileType<FleshChewerProjectileMega>()] > 0)
+            {
+            for (int bloood = 0; bloood < 5; bloood++)
+                {
+                int bloodyheck = Projectile.NewProjectile(projectile.position.X, projectile.position.Y, Main.rand.Next(-5, 6), Main.rand.Next(-5, 6),   mod.ProjectileType("FleshChewerProjectileMega2"), projectile.damage + 20, projectile.knockBack, projectile.owner, 0f, 0f);
+                }
+                projectile.timeLeft = 0;
+            }
 		}
 
 		private void UpdateAlpha()
@@ -234,6 +242,7 @@ namespace NinjaClass.Projectiles.Hardmode
 
 		private void NormalAI()
 		{
+            projectile.frame = 0;
 			TargetWhoAmI++;
 
 			if (TargetWhoAmI >= MAX_TICKS)
@@ -278,6 +287,8 @@ namespace NinjaClass.Projectiles.Hardmode
 
 		private void StickyAI()
 		{
+            projectile.frame = 1;
+            Main.player[projectile.owner].lifeRegen += 1;
 			// These 2 could probably be moved to the ModifyNPCHit hook, but in vanilla they are present in the AI
 			projectile.ignoreWater = true; // Make sure the projectile ignores water
 			projectile.tileCollide = false; // Make sure the projectile doesn't collide with tiles anymore
