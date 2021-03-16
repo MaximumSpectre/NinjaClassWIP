@@ -186,8 +186,16 @@ namespace NinjaClass.Projectiles.PreMega
 		// Change this number if you want to alter how the alpha changes
 		private const int ALPHA_REDUCTION = 25;
 		int deathCount = 0;
+		int firstframe = 0;
 		public override void AI()
 		{
+			if (firstframe == 0)
+			{
+				projectile.velocity *= 1.3f;
+				projectile.damage *= 8;
+				projectile.knockBack *= 1.2f;
+				firstframe = 1;
+			}
 			UpdateAlpha();
 			// Run either the Sticky AI or Normal AI
 			// Separating into different methods helps keeps your AI clean

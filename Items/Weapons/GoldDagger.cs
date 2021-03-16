@@ -19,7 +19,7 @@ namespace NinjaClass.Items.Weapons
         {
             item.shootSpeed = 11.4f;// speed of the projectile
             item.damage = 14;// damage of the weapon
-            item.knockBack = 3f;// knockback of the weapon
+            item.knockBack = 2.8f;// knockback of the weapon
             item.useStyle = ItemUseStyleID.SwingThrow;// the way the player animates
             item.useAnimation = 25;// the time of the throw animation
             item.useTime = 25;// the time between throws
@@ -35,6 +35,10 @@ namespace NinjaClass.Items.Weapons
             item.autoReuse = true;
             item.shoot = mod.ProjectileType(Projectile);
         }
+        public override void SetStaticDefaults()
+        {
+            Tooltip.SetDefault("Hidden Technique: Throw a glowing dagger that\nhas increased velocity, range and does 8x damage");
+        }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
@@ -43,8 +47,6 @@ namespace NinjaClass.Items.Weapons
             recipe.SetResult(this);
             recipe.AddRecipe();
         }
-        /* DO NOT MESS WITH STUFF PAST THIS POINT
-		UNLESS YOU'R DOIN SOMETHING UNIQUE*/
         public override bool CanUseItem(Player player)
         {
             if (player.HasBuff(mod.BuffType("HiddenTechnique")))
@@ -60,7 +62,3 @@ namespace NinjaClass.Items.Weapons
         }
     }
 }
-
-
-
-

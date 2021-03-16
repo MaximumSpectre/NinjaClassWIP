@@ -14,10 +14,10 @@ namespace NinjaClass.Items.Weapons
 	public class WoodenDagger : NinjaItem
 	{
 		public string Projectile = "WoodenDaggerProjectile";           // the main projectile
-		public string MegaProjectile = "WoodenDaggerProjectileMega";   // the MEGA projectile
+		public string MegaProjectile = "WoodenDaggerProjectileMega";   // the Hidden Technique projectile
 		public override void SetDefaults()
 		{
-			item.shootSpeed = 9.8f;// speed of the projectile
+			item.shootSpeed = 9.4f;// speed of the projectile
 			item.damage = 7;// damage of the weapon
 			item.knockBack = 1.2f;// knockback of the weapon
 			item.useStyle = ItemUseStyleID.SwingThrow;// the way the player animates
@@ -28,18 +28,28 @@ namespace NinjaClass.Items.Weapons
 			item.rare = ItemRarityID.White;// the amount you can stack of the item
 			item.maxStack = 1;// the amount you can stack of the item
 			item.UseSound = SoundID.Item1;              // the sound that plays when used
-			item.value = Item.sellPrice(silver: 5);    // the price of the item
+			item.value = Item.sellPrice(copper: 10);    // the price of the item
 			item.consumable = false;
 			item.noUseGraphic = true;
 			item.noMelee = true;
 			item.autoReuse = true;
 			item.shoot = mod.ProjectileType(Projectile);
 		}
-
-		/* DO NOT MESS WITH STUFF PAST THIS POINT
-		UNLESS YOU'R DOIN SOMETHING UNIQUE*/
+		public override void SetStaticDefaults()
+		{
+			Tooltip.SetDefault("Hidden Technique: Throw a glowing dagger that\nhas increased velocity, range and does 8x damage");
+		}
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.Wood, 18);
+			recipe.AddTile(TileID.WorkBenches);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
 		public override bool CanUseItem(Player player)
 		{
+			// Adds the Hidden Technique function
 			if (player.HasBuff(mod.BuffType("HiddenTechnique")))
 			{
 				item.shoot = mod.ProjectileType(MegaProjectile);

@@ -26,7 +26,7 @@ namespace NinjaClass.Items.Weapons.Hardmode
 			item.width = 30;
 			item.height = 30;
 			item.maxStack = 1;
-			item.rare = 4;
+			item.rare = 5;
 
 			item.consumable = false;
 			item.noUseGraphic = true;

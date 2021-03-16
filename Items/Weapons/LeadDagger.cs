@@ -17,7 +17,7 @@ namespace NinjaClass.Items.Weapons
         public string MegaProjectile = "LeadDaggerProjectileMega";   // the MEGA projectile
         public override void SetDefaults()
         {
-            item.shootSpeed = 9f;// speed of the projectile
+            item.shootSpeed = 10.4f;// speed of the projectile
             item.damage = 10;// damage of the weapon
             item.knockBack = 2.25f;// knockback of the weapon
             item.useStyle = ItemUseStyleID.SwingThrow;// the way the player animates
@@ -35,6 +35,10 @@ namespace NinjaClass.Items.Weapons
             item.autoReuse = true;
             item.shoot = mod.ProjectileType(Projectile);
         }
+        public override void SetStaticDefaults()
+        {
+            Tooltip.SetDefault("Hidden Technique: Throw a glowing dagger that\nhas increased velocity, range and does 8x damage");
+        }
         public override void AddRecipes()
         {
             ModRecipe recipe = new ModRecipe(mod);
@@ -43,8 +47,6 @@ namespace NinjaClass.Items.Weapons
             recipe.SetResult(this);
             recipe.AddRecipe();
         }
-        /* DO NOT MESS WITH STUFF PAST THIS POINT
-		UNLESS YOU'R DOIN SOMETHING UNIQUE*/
         public override bool CanUseItem(Player player)
         {
             if (player.HasBuff(mod.BuffType("HiddenTechnique")))
@@ -60,7 +62,3 @@ namespace NinjaClass.Items.Weapons
         }
     }
 }
-
-
-
-

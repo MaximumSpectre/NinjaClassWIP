@@ -202,7 +202,7 @@ namespace NinjaClass.Projectiles.PreMega
 			if (firstframe == 0)
 			{
 				projectile.velocity *= 1.3f;
-				projectile.damage *= 10;
+				projectile.damage *= 8;
 				projectile.knockBack *= 1.2f;
 				firstframe = 1;
 			}

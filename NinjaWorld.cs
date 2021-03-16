@@ -20,8 +20,8 @@ namespace NinjaClass
 		int ifItemSpawns = 0;
 		// We can use PostWorldGen for world generation tasks that don't need to happen between vanilla world generation steps.
 		public override void PostWorldGen() {
-
-
+			//Spawn In world chests example
+			/*
 			// Place some items in Ice Chests
 			int[] itemsToPlaceInIceChests = { ItemType<WoodenDagger>() };
 			int itemsToPlaceInIceChestsChoice = 0;
@@ -44,7 +44,7 @@ namespace NinjaClass
 						}
 					}
 				}
-			}
+			}*/
 		}
 	}
 }
