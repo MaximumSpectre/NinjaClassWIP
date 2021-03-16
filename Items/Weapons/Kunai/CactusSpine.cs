@@ -37,11 +37,11 @@ namespace NinjaClass.Items.Weapons.Kunai
 		}
 		public override void AddRecipes()
 		{
-          	  ModRecipe recipe = new ModRecipe(mod);
+          	  /*ModRecipe recipe = new ModRecipe(mod);
          	  recipe.AddIngredient(ItemID.Cactus, 12);
           	  recipe.AddTile(TileID.WorkBenches);
           	  recipe.SetResult(this);
-          	  recipe.AddRecipe();
+          	  recipe.AddRecipe();*/
        	}
 		public override bool Shoot(Player player, ref Vector2 position, ref float speedX, ref float speedY, ref int type, ref int damage, ref float knockBack)
         {

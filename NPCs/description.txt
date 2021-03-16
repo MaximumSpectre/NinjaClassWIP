@@ -1,0 +1,4 @@
+Ninja Class is a mod that adds a new class called ninja. It focuses mostly on throwing knives. 
+It is currently a WIP and only has pre-hardmore gear currently. It would be aprecciated if you helped me out and gave feedback on this mods forum page.
+
+Big thanks to Errorpotato for helping me out

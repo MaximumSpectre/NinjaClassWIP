@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "t91sRIXZpkWlOxhgBld/cD8i6cBYPixC8zXCPqeYlY5DGLAN4G3s0/pfBxoyDfunGvx9y3PDITUM+PHsOn9eSQ==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\jorda\\Documents\\My Games\\Terraria\\ModLoader\\Mod Sources\\NinjaClass\\NinjaClass.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jorda\\.nuget\\packages\\tmodloader.codeassist\\0.1.1\\tmodloader.codeassist.0.1.1.nupkg.sha512"
+  ],
+  "logs": []
+}
