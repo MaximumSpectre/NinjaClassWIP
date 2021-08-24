@@ -50,5 +50,16 @@ namespace NinjaClass.Items.Weapons
 			}
 			return base.CanUseItem(player);
 		}
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.Vine, 6);
+			recipe.AddIngredient(ItemID.Stinger, 10);
+			recipe.AddIngredient(ItemID.BeeWax, 12);
+			recipe.AddTile(TileID.Anvils);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
 	}
 }

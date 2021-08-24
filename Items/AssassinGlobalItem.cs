@@ -1,4 +1,5 @@
 using NinjaClass.Items.Accessories;
+using NinjaClass.Items.Weapons;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -17,7 +18,6 @@ namespace NinjaClass.Items
                 {
                 player.QuickSpawnItem(ItemType<ShinobiEmblem>());
                 }
-
             }
         }
     }

@@ -50,5 +50,16 @@ namespace NinjaClass.Items.Weapons
 			}
 			return base.CanUseItem(player);
 		}
+
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.DemoniteBar, 16);
+			recipe.AddIngredient(ItemID.RottenChunk, 8);
+			recipe.AddIngredient(ItemID.ShadowScale, 12);
+			recipe.AddTile(TileID.Anvils);
+			recipe.SetResult(this);
+			recipe.AddRecipe();
+		}
 	}
 }

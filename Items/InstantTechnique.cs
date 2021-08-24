@@ -30,13 +30,5 @@ namespace NinjaClass.Items
 			item.buffTime = 1200;
             return;
 		}
-		public override void AddRecipes()
-		{
-			ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(1169);
-			recipe.AddTile(13);
-			recipe.SetResult(this);
-			recipe.AddRecipe();
-		}
 	}
 }

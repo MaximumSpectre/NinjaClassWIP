@@ -1,5 +1,5 @@
 displayName = Ninja Class
 author = MaximumSpectre
-version = 0.1.0.3
+version = 0.1.0.4
 includePDB = false
 homepage = https://forums.terraria.org/index.php?threads/ninja-class-mod-wip.93588/
